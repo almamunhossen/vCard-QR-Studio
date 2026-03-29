@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>vCard QR Studio | Modern Logo Upload + Phone Extension</title>
+    <!-- Google Fonts + Font Awesome 6 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <div class="header-left">
+            <h1><i class="fas fa-qrcode"></i> vCard QR Studio</h1>
+            <div class="sub"><i class="fas fa-edit"></i> Live preview | Logo overlay | Phone extension | Mobile other (2)</div>
+        </div>
+        <div class="theme-toggle" id="themeToggle">
+            <i class="fas fa-moon"></i> <span>Dark/Light</span>
+        </div>
+    </div>
+
+    <div class="two-columns">
+        <!-- LEFT: Form Inputs -->
+        <div class="form-card">
+            <form id="mainForm">
+                <!-- Personal & Work with Organization and Job Title side by side -->
+                <div class="form-section">
+                    <h3><i class="fas fa-user"></i> Personal & Work</h3>
+                    <div class="input-row"><label>Full Name (FN)</label><input type="text" id="fullName" placeholder="Full Name" value=""></div>
+                    <div class="grid-2">
+                        <div class="input-row"><label>Organization / Company</label><input type="text" id="organization" placeholder="Company" value=""></div>
+                        <div class="input-row"><label>Job Title / Position (Work)</label><input type="text" id="jobTitle" placeholder="e.g. Senior Manager" value=""></div>
+                    </div>
+                </div>
+
+                <!-- Phone & Fax Section with reordered fields + Mobile Other(2) -->
+                <div class="form-section">
+                    <h3><i class="fas fa-phone-alt"></i> Phone & Fax</h3>
+                    <div class="grid-2">
+                        <div class="input-row"><label>Phone (Work)</label><input type="tel" id="phoneWork" placeholder="+880..." value=""></div>
+                        <div class="input-row"><label>Phone (Work) Extension</label><input type="text" id="phoneWorkExt" placeholder="Ext. 123" value=""></div>
+                        <div class="input-row"><label>Phone (Private)</label><input type="tel" id="phonePrivate" placeholder="+880..." value=""></div>
+                        <div class="input-row"><label>Fax (Private)</label><input type="tel" id="faxPrivate" placeholder="Fax number" value=""></div>
+                        <div class="input-row"><label>Phone (Mobile)</label><input type="tel" id="phoneMobile" placeholder="+880..." value=""></div>
+                        <div class="input-row"><label>Mobile Other (2)</label><input type="tel" id="phoneMobileOther" placeholder="+880..." value=""></div>
+                    </div>
+                </div>
+
+                <!-- Email & Web -->
+                <div class="form-section">
+                    <h3><i class="fas fa-globe"></i> Digital Profiles</h3>
+                    <div class="input-row"><label>Email</label><input type="email" id="email" placeholder="email@example.com" value=""></div>
+                    <div class="input-row"><label>Website (URL)</label><input type="url" id="website" placeholder="https://..." value=""></div>
+                    <div class="input-row"><label>WeChat ID</label><input type="text" id="wechatId" placeholder="wechat_id" value=""></div>
+                </div>
+
+                <!-- Social Links -->
+                <div class="form-section">
+                    <h3><i class="fas fa-share-alt"></i> Social Links (username or full URL)</h3>
+                    <div class="social-grid">
+                        <div class="social-item"><i class="fab fa-whatsapp"></i><span class="social-label">WhatsApp</span><input type="text" id="whatsappInput" placeholder="+966546177621 or URL"></div>
+                        <div class="social-item"><i class="fab fa-facebook"></i><span class="social-label">Facebook</span><input type="text" id="facebookInput" placeholder="username or URL"></div>
+                        <div class="social-item"><i class="fab fa-twitter"></i><span class="social-label">X (Twitter)</span><input type="text" id="xInput" placeholder="@username or URL"></div>
+                        <div class="social-item"><i class="fab fa-youtube"></i><span class="social-label">YouTube</span><input type="text" id="youtubeInput" placeholder="@handle or URL"></div>
+                        <div class="social-item"><i class="fab fa-instagram"></i><span class="social-label">Instagram</span><input type="text" id="instagramInput" placeholder="username or URL"></div>
+                        <div class="social-item"><i class="fab fa-linkedin"></i><span class="social-label">LinkedIn</span><input type="text" id="linkedinInput" placeholder="username or URL"></div>
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div class="form-section">
+                    <h3><i class="fas fa-map-marker-alt"></i> Location</h3>
+                    <div class="input-row"><label>Office Address</label><input type="text" id="address" placeholder="Street, City, Country" value=""></div>
+                    <div class="input-row"><label>Google Maps URL</label><input type="url" id="mapsUrl" placeholder="https://maps.google.com/..."></div>
+                </div>
+
+                <!-- WiFi Section -->
+                <div class="form-section">
+                    <h3><i class="fas fa-wifi"></i> WiFi Network (optional)</h3>
+                    <div class="grid-2">
+                        <div class="input-row"><label>SSID</label><input type="text" id="wifiSsid" placeholder="Network name"></div>
+                        <div class="input-row"><label>Password</label><input type="text" id="wifiPassword" placeholder="Password"></div>
+                        <div class="input-row"><label>Encryption</label>
+                            <select id="wifiEncryption">
+                                <option value="WPA">WPA/WPA2</option>
+                                <option value="WEP">WEP</option>
+                                <option value="nopass">None (Open)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manual Update Button -->
+                <button type="button" id="manualUpdateBtn" class="btn-primary"><i class="fas fa-sync-alt"></i> Update QR & Preview</button>
+            </form>
+        </div>
+
+        <!-- RIGHT: QR + MODERN LOGO UPLOAD + VCARD EDITOR -->
+        <div class="qr-card">
+            <div class="qr-visual">
+                <h3 style="font-weight: 700; color: var(--text-primary);"><i class="fas fa-qrcode"></i> QR Code with Logo</h3>
+                <div class="qr-svg-container" id="svgQrContainer">
+                    <svg id="dynamicQRsvg" class="qr-svg" width="220" height="220" viewBox="0 0 220 220"></svg>
+                </div>
+                
+                <!-- Modern Logo Upload Area -->
+                <div class="logo-upload-area">
+                    <div class="dropzone" id="logoDropzone">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Click or drag & drop to upload logo</p>
+                        <p style="font-size:0.65rem;">PNG, JPG, SVG (recommended size: 60x60px)</p>
+                        <input type="file" id="logoFileInput" accept="image/*" style="display: none;">
+                    </div>
+                    <div class="logo-preview-modern" id="logoPreviewModern" style="display: none;">
+                        <img id="logoThumb" class="logo-thumb-modern" alt="logo preview">
+                        <div class="logo-controls">
+                            <div class="input-row">
+                                <label>Logo Size (px)</label>
+                                <input type="range" id="logoSize" min="30" max="90" value="55" step="1">
+                                <span class="range-value" id="logoSizeValue">55px</span>
+                            </div>
+                            <div class="input-row">
+                                <label><i class="fas fa-eraser"></i> Remove QR Background Behind Logo</label>
+                                <input type="checkbox" id="eraseBehindLogo" style="width: auto; margin-left: 8px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="logoStatus" class="info-badge" style="margin-top: 8px; display: inline-block;">No logo selected</div>
+                </div>
+                
+                <div class="btn-group-qr">
+                    <button id="downloadSvgBtn" class="btn-outline"><i class="fas fa-download"></i> SVG</button>
+                    <button id="downloadPngBtn" class="btn-outline"><i class="fas fa-image"></i> PNG</button>
+                    <button id="downloadVcfBtn" class="btn-outline"><i class="fas fa-address-card"></i> .vcf</button>
+                </div>
+            </div>
+            
+            <!-- LIVE VCARD EDITOR -->
+            <div class="vcard-editor">
+                <label><i class="fas fa-edit"></i> vCard Preview (Editable) → QR updates instantly</label>
+                <textarea id="vcardTextarea" rows="6" placeholder="vCard content will appear here... edit any text to update QR"></textarea>
+                <div class="info-badge" style="margin-top: 6px;"><i class="fas fa-sync-alt"></i> Edit vCard text → QR auto-regenerates (with logo)</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
