@@ -6,7 +6,7 @@ A powerful web-based tool to generate dynamic vCard QR codes with **logo overlay
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow)
 
-![Preview](https://via.placeholder.com/800x400?text=vCard+QR+Studio+Preview)
+![Preview](https://almamunhossen.github.io/vCard-QR-Studio/)
 
 ## ✨ Features
 

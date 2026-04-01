@@ -1,154 +1,460 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>vCard QR Studio | Modern Logo Upload + Phone Extension</title>
-    <!-- Google Fonts + Font Awesome 6 -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <title>QR Studio Pro | Complete vCard + Crypto + Social Media + Location Maps</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <link rel="shortcut icon" href="QR-Cod.png" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div class="app-container">
-    <div class="header">
-        <div class="header-left">
-            <h1><i class="fas fa-qrcode"></i> vCard QR Studio</h1>
-            <div class="sub"><i class="fas fa-edit"></i> Live preview | Logo overlay | Phone extension | Mobile other (2)</div>
+    <div class="app-container">
+        <div class="header">
+            <div class="header-left">
+                <h1><i class="fas fa-qrcode"></i> QR Studio Pro</h1>
+                <div class="sub"><i class="fas fa-address-card"></i> Complete vCard | Crypto Payments | Social Media |
+                    Location Maps</div>
+            </div>
+            <div class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i> <span>Dark/Light</span>
+            </div>
         </div>
-        <div class="theme-toggle" id="themeToggle">
-            <i class="fas fa-moon"></i> <span>Dark/Light</span>
+
+        <!-- TABS with Icons -->
+        <div class="qr-tabs">
+            <button class="tab-btn active" data-tab="vcard-tab"><i class="fas fa-address-card"></i> vCard</button>
+            <button class="tab-btn" data-tab="url-tab"><i class="fas fa-link"></i> URL</button>
+            <button class="tab-btn" data-tab="crypto-tab"><i class="fab fa-bitcoin"></i> Crypto</button>
+            <button class="tab-btn" data-tab="facebook-tab"><i class="fab fa-facebook"></i> Facebook</button>
+            <button class="tab-btn" data-tab="x-tab"><i class="fab fa-twitter"></i> X</button>
+            <button class="tab-btn" data-tab="youtube-tab"><i class="fab fa-youtube"></i> YouTube</button>
+            <button class="tab-btn" data-tab="instagram-tab"><i class="fab fa-instagram"></i> Instagram</button>
+            <button class="tab-btn" data-tab="linkedin-tab"><i class="fab fa-linkedin"></i> LinkedIn</button>
+            <button class="tab-btn" data-tab="whatsapp-tab"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+            <button class="tab-btn" data-tab="github-tab"><i class="fab fa-github"></i> GitHub</button>
+            <button class="tab-btn" data-tab="behance-tab"><i class="fab fa-behance"></i> Behance</button>
+            <button class="tab-btn" data-tab="hikmah-tab"><i class="fas fa-graduation-cap"></i> Hikmah</button>
+            <button class="tab-btn" data-tab="text-tab"><i class="fas fa-paragraph"></i> Text</button>
+            <button class="tab-btn" data-tab="email-tab"><i class="fas fa-envelope"></i> Email</button>
+            <button class="tab-btn" data-tab="phone-tab"><i class="fas fa-phone"></i> Phone</button>
+            <button class="tab-btn" data-tab="sms-tab"><i class="fas fa-comment-dots"></i> SMS</button>
+            <button class="tab-btn" data-tab="wifi-tab"><i class="fas fa-wifi"></i> WiFi</button>
+            <button class="tab-btn" data-tab="location-tab"><i class="fas fa-map-marker-alt"></i> Location</button>
+            <button class="tab-btn" data-tab="event-tab"><i class="fas fa-calendar-alt"></i> Event</button>
         </div>
-    </div>
 
-    <div class="two-columns">
-        <!-- LEFT: Form Inputs -->
-        <div class="form-card">
-            <form id="mainForm">
-                <!-- Personal & Work with Organization and Job Title side by side -->
-                <div class="form-section">
-                    <h3><i class="fas fa-user"></i> Personal & Work</h3>
-                    <div class="input-row"><label>Full Name (FN)</label><input type="text" id="fullName" placeholder="Full Name" value=""></div>
-                    <div class="grid-2">
-                        <div class="input-row"><label>Organization / Company</label><input type="text" id="organization" placeholder="Company" value=""></div>
-                        <div class="input-row"><label>Job Title / Position (Work)</label><input type="text" id="jobTitle" placeholder="e.g. Senior Manager" value=""></div>
+        <div class="two-columns">
+            <div class="form-card">
+                <!-- VCARD PANEL -->
+                <div id="vcard-tab" class="tab-panel active-panel">
+                    <div class="accordion-item">
+                        <div class="accordion-header" data-target="personalAcc"><i
+                                class="fas fa-user"></i><span>Personal & Work</span><i
+                                class="fas fa-chevron-down toggle-icon"></i></div>
+                        <div id="personalAcc" class="accordion-content open">
+                            <div class="input-row"><label><i class="fas fa-user"></i> Full Name (FN)</label><input
+                                    type="text" id="fullName" placeholder="Full Name" class="auto-update-input"></div>
+                            <div class="grid-2">
+                                <div class="input-row"><label><i class="fas fa-building"></i> Organization</label><input
+                                        type="text" id="organization" placeholder="Company" class="auto-update-input">
+                                </div>
+                                <div class="input-row"><label><i class="fas fa-briefcase"></i> Job Title</label><input
+                                        type="text" id="jobTitle" placeholder="e.g. Senior Manager"
+                                        class="auto-update-input"></div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Phone & Fax Section with reordered fields + Mobile Other(2) -->
-                <div class="form-section">
-                    <h3><i class="fas fa-phone-alt"></i> Phone & Fax</h3>
-                    <div class="grid-2">
-                        <div class="input-row"><label>Phone (Work)</label><input type="tel" id="phoneWork" placeholder="+880..." value=""></div>
-                        <div class="input-row"><label>Phone (Work) Extension</label><input type="text" id="phoneWorkExt" placeholder="Ext. 123" value=""></div>
-                        <div class="input-row"><label>Phone (Private)</label><input type="tel" id="phonePrivate" placeholder="+880..." value=""></div>
-                        <div class="input-row"><label>Fax (Private)</label><input type="tel" id="faxPrivate" placeholder="Fax number" value=""></div>
-                        <div class="input-row"><label>Phone (Mobile)</label><input type="tel" id="phoneMobile" placeholder="+880..." value=""></div>
-                        <div class="input-row"><label>Mobile Other (2)</label><input type="tel" id="phoneMobileOther" placeholder="+880..." value=""></div>
+                    <div class="accordion-item">
+                        <div class="accordion-header" data-target="phoneAcc"><i class="fas fa-phone-alt"></i><span>Phone
+                                & Fax</span><i class="fas fa-chevron-down toggle-icon"></i></div>
+                        <div id="phoneAcc" class="accordion-content">
+                            <div class="grid-2">
+                                <div class="input-row"><label>Phone (Work)</label><input type="tel" id="phoneWork"
+                                        placeholder="+966..." class="auto-update-input"></div>
+                                <div class="input-row"><label>Extension</label><input type="text" id="phoneWorkExt"
+                                        placeholder="Ext. 123" class="auto-update-input"></div>
+                                <div class="input-row"><label>Phone (Private)</label><input type="tel" id="phonePrivate"
+                                        placeholder="+966..." class="auto-update-input"></div>
+                                <div class="input-row"><label>Fax</label><input type="tel" id="faxPrivate"
+                                        placeholder="Fax number" class="auto-update-input"></div>
+                                <div class="input-row"><label>Mobile</label><input type="tel" id="phoneMobile"
+                                        placeholder="+966..." class="auto-update-input"></div>
+                                <div class="input-row"><label>Mobile Other</label><input type="tel"
+                                        id="phoneMobileOther" placeholder="+966..." class="auto-update-input"></div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Email & Web -->
-                <div class="form-section">
-                    <h3><i class="fas fa-globe"></i> Digital Profiles</h3>
-                    <div class="input-row"><label>Email</label><input type="email" id="email" placeholder="email@example.com" value=""></div>
-                    <div class="input-row"><label>Website (URL)</label><input type="url" id="website" placeholder="https://..." value=""></div>
-                    <div class="input-row"><label>WeChat ID</label><input type="text" id="wechatId" placeholder="wechat_id" value=""></div>
-                </div>
-
-                <!-- Social Links -->
-                <div class="form-section">
-                    <h3><i class="fas fa-share-alt"></i> Social Links (username or full URL)</h3>
-                    <div class="social-grid">
-                        <div class="social-item"><i class="fab fa-whatsapp"></i><span class="social-label">WhatsApp</span><input type="text" id="whatsappInput" placeholder="+966546177621 or URL"></div>
-                        <div class="social-item"><i class="fab fa-facebook"></i><span class="social-label">Facebook</span><input type="text" id="facebookInput" placeholder="username or URL"></div>
-                        <div class="social-item"><i class="fab fa-twitter"></i><span class="social-label">X (Twitter)</span><input type="text" id="xInput" placeholder="@username or URL"></div>
-                        <div class="social-item"><i class="fab fa-youtube"></i><span class="social-label">YouTube</span><input type="text" id="youtubeInput" placeholder="@handle or URL"></div>
-                        <div class="social-item"><i class="fab fa-instagram"></i><span class="social-label">Instagram</span><input type="text" id="instagramInput" placeholder="username or URL"></div>
-                        <div class="social-item"><i class="fab fa-linkedin"></i><span class="social-label">LinkedIn</span><input type="text" id="linkedinInput" placeholder="username or URL"></div>
+                    <div class="accordion-item">
+                        <div class="accordion-header" data-target="digitalAcc"><i class="fas fa-globe"></i><span>Digital
+                                Profiles</span><i class="fas fa-chevron-down toggle-icon"></i></div>
+                        <div id="digitalAcc" class="accordion-content">
+                            <div class="input-row"><label><i class="fas fa-envelope"></i> Email</label><input
+                                    type="email" id="vcardEmail" placeholder="email@example.com"
+                                    class="auto-update-input"></div>
+                            <div class="input-row"><label><i class="fas fa-globe"></i> Website</label><input type="url"
+                                    id="vcardWebsite" placeholder="https://..." class="auto-update-input"></div>
+                            <div class="input-row"><label><i class="fab fa-weixin"></i> WeChat ID</label><input
+                                    type="text" id="wechatId" placeholder="wechat_id" class="auto-update-input"></div>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Location -->
-                <div class="form-section">
-                    <h3><i class="fas fa-map-marker-alt"></i> Location</h3>
-                    <div class="input-row"><label>Office Address</label><input type="text" id="address" placeholder="Street, City, Country" value=""></div>
-                    <div class="input-row"><label>Google Maps URL</label><input type="url" id="mapsUrl" placeholder="https://maps.google.com/..."></div>
-                </div>
-
-                <!-- WiFi Section -->
-                <div class="form-section">
-                    <h3><i class="fas fa-wifi"></i> WiFi Network (optional)</h3>
-                    <div class="grid-2">
-                        <div class="input-row"><label>SSID</label><input type="text" id="wifiSsid" placeholder="Network name"></div>
-                        <div class="input-row"><label>Password</label><input type="text" id="wifiPassword" placeholder="Password"></div>
-                        <div class="input-row"><label>Encryption</label>
-                            <select id="wifiEncryption">
-                                <option value="WPA">WPA/WPA2</option>
-                                <option value="WEP">WEP</option>
-                                <option value="nopass">None (Open)</option>
-                            </select>
+                    <div class="accordion-item">
+                        <div class="accordion-header" data-target="socialVcardAcc"><i
+                                class="fas fa-share-alt"></i><span>Social Links</span><i
+                                class="fas fa-chevron-down toggle-icon"></i></div>
+                        <div id="socialVcardAcc" class="accordion-content">
+                            <div class="input-row"><label><i class="fab fa-whatsapp"></i> WhatsApp</label><input
+                                    type="text" id="whatsappInput" placeholder="+966..." class="auto-update-input">
+                            </div>
+                            <div class="input-row"><label><i class="fab fa-facebook"></i> Facebook</label><input
+                                    type="text" id="facebookInput" placeholder="username" class="auto-update-input">
+                            </div>
+                            <div class="input-row"><label><i class="fab fa-twitter"></i> X</label><input type="text"
+                                    id="xInput" placeholder="@username" class="auto-update-input"></div>
+                            <div class="input-row"><label><i class="fab fa-youtube"></i> YouTube</label><input
+                                    type="text" id="youtubeInput" placeholder="@handle" class="auto-update-input"></div>
+                            <div class="input-row"><label><i class="fab fa-instagram"></i> Instagram</label><input
+                                    type="text" id="instagramInput" placeholder="username" class="auto-update-input">
+                            </div>
+                            <div class="input-row"><label><i class="fab fa-linkedin"></i> LinkedIn</label><input
+                                    type="text" id="linkedinInput" placeholder="username" class="auto-update-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header" data-target="locationVcardAcc"><i
+                                class="fas fa-map-marker-alt"></i><span>Location</span><i
+                                class="fas fa-chevron-down toggle-icon"></i></div>
+                        <div id="locationVcardAcc" class="accordion-content">
+                            <div class="input-row"><label><i class="fas fa-address-card"></i> Office
+                                    Address</label><input type="text" id="vcardAddress"
+                                    placeholder="Street, City, Country" class="auto-update-input"></div>
+                            <div class="input-row"><label><i class="fas fa-map"></i> Google Maps URL</label><input
+                                    type="url" id="vcardMapsUrl" placeholder="https://maps.google.com/..."
+                                    class="auto-update-input"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Manual Update Button -->
-                <button type="button" id="manualUpdateBtn" class="btn-primary"><i class="fas fa-sync-alt"></i> Update QR & Preview</button>
-            </form>
-        </div>
-
-        <!-- RIGHT: QR + MODERN LOGO UPLOAD + VCARD EDITOR -->
-        <div class="qr-card">
-            <div class="qr-visual">
-                <h3 style="font-weight: 700; color: var(--text-primary);"><i class="fas fa-qrcode"></i> QR Code with Logo</h3>
-                <div class="qr-svg-container" id="svgQrContainer">
-                    <svg id="dynamicQRsvg" class="qr-svg" width="220" height="220" viewBox="0 0 220 220"></svg>
-                </div>
-                
-                <!-- Modern Logo Upload Area -->
-                <div class="logo-upload-area">
-                    <div class="dropzone" id="logoDropzone">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        <p>Click or drag & drop to upload logo</p>
-                        <p style="font-size:0.65rem;">PNG, JPG, SVG (recommended size: 60x60px)</p>
-                        <input type="file" id="logoFileInput" accept="image/*" style="display: none;">
+                <div id="url-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fas fa-link"></i> URL QR Code</h3>
                     </div>
-                    <div class="logo-preview-modern" id="logoPreviewModern" style="display: none;">
-                        <img id="logoThumb" class="logo-thumb-modern" alt="logo preview">
-                        <div class="logo-controls">
-                            <div class="input-row">
-                                <label>Logo Size (px)</label>
-                                <input type="range" id="logoSize" min="30" max="90" value="55" step="1">
-                                <span class="range-value" id="logoSizeValue">55px</span>
+                    <div class="input-row"><label>Your URL</label><input type="url" id="urlInput" value="https://"
+                            class="auto-update-input"></div>
+                </div>
+                <div id="crypto-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fab fa-bitcoin"></i> Cryptocurrency Payment QR</h3>
+                    </div>
+                    <div class="crypto-selector">
+                        <div class="crypto-options" id="cryptoOptions">
+                            <div class="crypto-option" data-crypto="bitcoin"><input type="radio" name="crypto"
+                                    value="bitcoin" checked><i class="fab fa-bitcoin"></i><span>Bitcoin (BTC)</span>
                             </div>
-                            <div class="input-row">
-                                <label><i class="fas fa-eraser"></i> Remove QR Background Behind Logo</label>
-                                <input type="checkbox" id="eraseBehindLogo" style="width: auto; margin-left: 8px;">
+                            <div class="crypto-option" data-crypto="bitcoincash"><input type="radio" name="crypto"
+                                    value="bitcoincash"><i class="fab fa-bitcoin"></i><span>Bitcoin Cash (BCH)</span>
+                            </div>
+                            <div class="crypto-option" data-crypto="ethereum"><input type="radio" name="crypto"
+                                    value="ethereum"><i class="fab fa-ethereum"></i><span>Ethereum (ETH)</span></div>
+                            <div class="crypto-option" data-crypto="litecoin"><input type="radio" name="crypto"
+                                    value="litecoin"><i class="fab fa-bitcoin"></i><span>Litecoin (LTC)</span></div>
+                            <div class="crypto-option" data-crypto="dash"><input type="radio" name="crypto"
+                                    value="dash"><i class="fas fa-chart-line"></i><span>Dash (DASH)</span></div>
+                        </div>
+                        <div class="input-row"><label><i class="fas fa-qrcode"></i> Wallet Address</label><input
+                                type="text" id="cryptoAddress" placeholder="Enter wallet address"
+                                class="auto-update-input"></div>
+                        <div class="input-row"><label><i class="fas fa-coins"></i> Amount (Optional)</label><input
+                                type="text" id="cryptoAmount" placeholder="0.00" class="auto-update-input"></div>
+                    </div>
+                </div>
+                <div id="location-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fas fa-map-marker-alt"></i> Location QR (GEO URI)</h3>
+                    </div>
+                    <div class="location-search-container">
+                        <div class="input-row"><label><i class="fas fa-search-location"></i> Search
+                                Address</label><input type="text" id="addressSearch"
+                                placeholder="e.g., 5th Avenue, New York" class="auto-update-input"><button
+                                id="searchAddressBtn" class="search-button"><i class="fas fa-map-pin"></i> Search & Get
+                                Coordinates</button></div>
+                        <div class="grid-2">
+                            <div class="input-row"><label><i class="fas fa-arrow-up"></i> Latitude</label><input
+                                    type="text" id="latitude" placeholder="e.g., 40.7128" class="auto-update-input">
+                            </div>
+                            <div class="input-row"><label><i class="fas fa-arrow-right"></i> Longitude</label><input
+                                    type="text" id="longitude" placeholder="e.g., -74.0060" class="auto-update-input">
                             </div>
                         </div>
+                        <div id="locationStatus" class="location-status"><i class="fas fa-info-circle"></i> Enter an
+                            address and click search</div>
                     </div>
-                    <div id="logoStatus" class="info-badge" style="margin-top: 8px; display: inline-block;">No logo selected</div>
+                    <div class="google-map-container"><iframe id="googleMapIframe"
+                            src="https://maps.google.com/maps?q=40.7128,-74.0060&z=12&output=embed" allowfullscreen=""
+                            loading="lazy"></iframe></div>
+                    <div class="info-badge" style="margin-top: 12px;"><i class="fas fa-map-pin"></i> Scan QR code to
+                        open location in maps app</div>
                 </div>
-                
-                <div class="btn-group-qr">
-                    <button id="downloadSvgBtn" class="btn-outline"><i class="fas fa-download"></i> SVG</button>
-                    <button id="downloadPngBtn" class="btn-outline"><i class="fas fa-image"></i> PNG</button>
-                    <button id="downloadVcfBtn" class="btn-outline"><i class="fas fa-address-card"></i> .vcf</button>
+                <div id="facebook-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fab fa-facebook"></i> Facebook QR</h3>
+                    </div>
+                    <div class="input-row"><label>Facebook URL</label><input type="url" id="facebookUrlInput"
+                            value="https://facebook.com/" class="auto-update-input"></div>
+                </div>
+                <div id="x-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fab fa-twitter"></i> X QR</h3>
+                    </div>
+                    <div class="input-row"><label>X URL</label><input type="url" id="xUrlInput" value="https://x.com/"
+                            class="auto-update-input"></div>
+                </div>
+                <div id="youtube-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fab fa-youtube"></i> YouTube QR</h3>
+                    </div>
+                    <div class="input-row"><label>YouTube URL</label><input type="url" id="youtubeUrlInput"
+                            value="https://youtube.com/" class="auto-update-input"></div>
+                </div>
+                <div id="instagram-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fab fa-instagram"></i> Instagram QR</h3>
+                    </div>
+                    <div class="input-row"><label>Instagram URL</label><input type="url" id="instagramUrlInput"
+                            value="https://instagram.com/" class="auto-update-input"></div>
+                </div>
+                <div id="linkedin-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fab fa-linkedin"></i> LinkedIn QR</h3>
+                    </div>
+                    <div class="input-row"><label>LinkedIn URL</label><input type="url" id="linkedinUrlInput"
+                            value="https://linkedin.com/in/" class="auto-update-input"></div>
+                </div>
+                <div id="whatsapp-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fab fa-whatsapp"></i> WhatsApp QR</h3>
+                    </div>
+                    <div class="input-row"><label>WhatsApp Number</label><input type="tel" id="whatsappNumber"
+                            value="https://api.whatsapp.com/send?phone=" class="auto-update-input"></div>
+                </div>
+                <div id="github-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fab fa-github"></i> GitHub QR</h3>
+                    </div>
+                    <div class="input-row"><label>GitHub URL</label><input type="url" id="githubUrlInput"
+                            value="https://github.com/" class="auto-update-input"></div>
+                </div>
+                <div id="behance-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fab fa-behance"></i> Behance QR</h3>
+                    </div>
+                    <div class="input-row"><label>Behance URL</label><input type="url" id="behanceUrlInput"
+                            value="https://behance.net/" class="auto-update-input"></div>
+                </div>
+                <div id="hikmah-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fas fa-graduation-cap"></i> Hikmah QR</h3>
+                    </div>
+                    <div class="input-row"><label>Hikmah URL</label><input type="url" id="hikmahUrlInput"
+                            value="https://hikmah.net/@" class="auto-update-input"></div>
+                </div>
+                <div id="text-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fas fa-paragraph"></i> Text QR</h3>
+                    </div>
+                    <div class="input-row"><label>Your Text</label><textarea id="textInput" rows="5"
+                            class="auto-update-input"></textarea></div>
+                </div>
+                <div id="email-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fas fa-envelope"></i> Email QR</h3>
+                    </div>
+                    <div class="input-row"><label>Email</label><input type="email" id="emailAddress"
+                            class="auto-update-input"></div>
+                    <div class="input-row"><label>Subject</label><input type="text" id="emailSubject"
+                            class="auto-update-input"></div>
+                    <div class="input-row"><label>Message</label><textarea id="emailMessage" rows="4"
+                            class="auto-update-input"></textarea></div>
+                </div>
+                <div id="phone-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fas fa-phone"></i> Phone QR</h3>
+                    </div>
+                    <div class="input-row"><label>Phone Number</label><input type="tel" id="phoneNumber"
+                            class="auto-update-input"></div>
+                </div>
+                <div id="sms-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fas fa-comment-dots"></i> SMS QR</h3>
+                    </div>
+                    <div class="input-row"><label>Phone Number</label><input type="tel" id="smsNumber"
+                            class="auto-update-input"></div>
+                    <div class="input-row"><label>Message</label><textarea id="smsMessage" rows="4"
+                            class="auto-update-input"></textarea></div>
+                </div>
+                <div id="wifi-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fas fa-wifi"></i> WiFi QR</h3>
+                    </div>
+                    <div class="input-row"><label>SSID</label><input type="text" id="wifiSsid"
+                            class="auto-update-input"></div>
+                    <div class="input-row"><label>Password</label><input type="text" id="wifiPassword"
+                            class="auto-update-input"></div>
+                    <div class="input-row"><label>Encryption</label><select id="wifiEncryption"
+                            class="auto-update-input">
+                            <option value="WPA">WPA/WPA2</option>
+                            <option value="WEP">WEP</option>
+                            <option value="nopass">None</option>
+                        </select></div>
+                </div>
+                <div id="event-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fas fa-calendar-alt"></i> Event QR</h3>
+                    </div>
+                    <div class="input-row"><label>Event Title</label><input type="text" id="eventTitle"
+                            class="auto-update-input"></div>
+                    <div class="input-row"><label>Location</label><input type="text" id="eventLocation"
+                            class="auto-update-input"></div>
+                    <div class="grid-2">
+                        <div class="input-row"><label>Start Date</label><input type="datetime-local" id="eventStart"
+                                class="auto-update-input"></div>
+                        <div class="input-row"><label>End Date</label><input type="datetime-local" id="eventEnd"
+                                class="auto-update-input"></div>
+                    </div>
+                </div>
+
+                <!-- CENTER ICON ACCORDION -->
+                <div class="accordion-item">
+                    <div class="accordion-header" data-target="centerIconAcc"><i class="fas fa-icons"></i><span>Center
+                            Icon</span><i class="fas fa-chevron-down toggle-icon"></i></div>
+                    <div id="centerIconAcc" class="accordion-content">
+                        <div class="center-icon-controls">
+                            <div class="info-badge"><i class="fas fa-info-circle"></i> Select an icon to display in QR
+                                center</div>
+                            <button id="clearCenterIconBtn" class="btn-outline"
+                                style="padding: 4px 12px; font-size: 0.7rem;"><i class="fas fa-trash"></i>
+                                Clear</button>
+                        </div>
+                        <div class="icon-selector-grid" id="centerIconSelectorGrid">
+                            <div class="icon-option" data-icon="fas fa-address-card"><i
+                                    class="fas fa-address-card"></i><span>vCard</span></div>
+                            <div class="icon-option" data-icon="fas fa-link"><i class="fas fa-link"></i><span>URL</span>
+                            </div>
+                            <div class="icon-option" data-icon="fab fa-bitcoin"><i
+                                    class="fab fa-bitcoin"></i><span>Crypto</span></div>
+                            <div class="icon-option" data-icon="fab fa-facebook"><i
+                                    class="fab fa-facebook"></i><span>Facebook</span></div>
+                            <div class="icon-option" data-icon="fab fa-twitter"><i
+                                    class="fab fa-twitter"></i><span>X</span></div>
+                            <div class="icon-option" data-icon="fab fa-youtube"><i
+                                    class="fab fa-youtube"></i><span>YouTube</span></div>
+                            <div class="icon-option" data-icon="fab fa-instagram"><i
+                                    class="fab fa-instagram"></i><span>Instagram</span></div>
+                            <div class="icon-option" data-icon="fab fa-linkedin"><i
+                                    class="fab fa-linkedin"></i><span>LinkedIn</span></div>
+                            <div class="icon-option" data-icon="fab fa-whatsapp"><i
+                                    class="fab fa-whatsapp"></i><span>WhatsApp</span></div>
+                            <div class="icon-option" data-icon="fab fa-github"><i
+                                    class="fab fa-github"></i><span>GitHub</span></div>
+                            <div class="icon-option" data-icon="fab fa-behance"><i
+                                    class="fab fa-behance"></i><span>Behance</span></div>
+                            <div class="icon-option" data-icon="fas fa-graduation-cap"><i
+                                    class="fas fa-graduation-cap"></i><span>Hikmah</span></div>
+                            <div class="icon-option" data-icon="fas fa-paragraph"><i
+                                    class="fas fa-paragraph"></i><span>Text</span></div>
+                            <div class="icon-option" data-icon="fas fa-envelope"><i
+                                    class="fas fa-envelope"></i><span>Email</span></div>
+                            <div class="icon-option" data-icon="fas fa-phone"><i
+                                    class="fas fa-phone"></i><span>Phone</span></div>
+                            <div class="icon-option" data-icon="fas fa-comment-dots"><i
+                                    class="fas fa-comment-dots"></i><span>SMS</span></div>
+                            <div class="icon-option" data-icon="fas fa-wifi"><i
+                                    class="fas fa-wifi"></i><span>WiFi</span></div>
+                            <div class="icon-option" data-icon="fas fa-map-marker-alt"><i
+                                    class="fas fa-map-marker-alt"></i><span>Location</span></div>
+                            <div class="icon-option" data-icon="fas fa-calendar-alt"><i
+                                    class="fas fa-calendar-alt"></i><span>Event</span></div>
+                        </div>
+                        <div id="centerIconStatus" class="info-badge" style="margin-top: 12px;"><i
+                                class="fas fa-icons"></i> No icon selected</div>
+                        <div class="size-slider" style="margin-top: 12px;">
+                            <label><i class="fas fa-expand-alt"></i> Icon Size</label>
+                            <input type="range" id="centerIconSize" min="30" max="90" value="55">
+                            <span class="center-icon-size-value" id="centerIconSizeValue">55px</span>
+                        </div>
+                        <div style="margin-top: 12px;">
+                            <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox"
+                                    id="eraseBehindIcon"> Erase background behind icon</label>
+                        </div>
+                        <div class="size-slider" style="margin-top: 8px;">
+                            <label><i class="fas fa-border-all"></i> Background border radius</label>
+                            <input type="range" id="iconBgRadius" min="0" max="30" value="12" step="1">
+                            <span class="center-icon-size-value" id="iconBgRadiusValue">12px</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MOVED AUTO-UPDATE BADGE -->
+                <div class="badge-moved">
+                    <div class="auto-update-badge"><i class="fas fa-sync-alt"></i> Auto-updates as you type</div>
                 </div>
             </div>
-            
-            <!-- LIVE VCARD EDITOR -->
-            <div class="vcard-editor">
-                <label><i class="fas fa-edit"></i> vCard Preview (Editable) → QR updates instantly</label>
-                <textarea id="vcardTextarea" rows="6" placeholder="vCard content will appear here... edit any text to update QR"></textarea>
-                <div class="info-badge" style="margin-top: 6px;"><i class="fas fa-sync-alt"></i> Edit vCard text → QR auto-regenerates (with logo)</div>
+
+            <!-- RIGHT: QR Preview -->
+            <div class="qr-card">
+                <div class="qr-visual">
+                    <h3><i class="fas fa-qrcode"></i> QR Code Preview <span
+                            style="font-size: 0.7rem;">(Auto-updating)</span></h3>
+                    <div class="qr-svg-container" id="svgQrContainer">
+                        <svg id="dynamicQRsvg" class="qr-svg" width="220" height="220" viewBox="0 0 220 220"></svg>
+                    </div>
+
+                    <!-- Logo Upload Area -->
+                    <div class="logo-upload-area">
+                        <div class="dropzone" id="logoDropzone">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Click or drag & drop to upload LOGO</p>
+                            <input type="file" id="logoFileInput" accept="image/*" style="display: none;">
+                        </div>
+                        <div class="progress-bar-container" id="logoProgressContainer" style="display: none;">
+                            <div class="progress-bar" id="logoProgressBar"></div>
+                        </div>
+                        <div id="logoPreviewModern" style="display: none;">
+                            <img id="logoThumb" style="width: 60px; height: 60px; object-fit: contain;">
+                            <div class="size-slider">
+                                <label><i class="fas fa-expand-alt"></i> Logo Size</label>
+                                <input type="range" id="logoSize" min="30" max="90" value="55">
+                                <span id="logoSizeValue">55px</span>
+                            </div>
+                            <label style="display: flex; align-items: center; gap: 8px; margin-top: 8px;"><input
+                                    type="checkbox" id="eraseBehindLogo"> Erase background behind logo</label>
+                        </div>
+                        <div id="logoStatus" class="info-badge"><i class="fas fa-image"></i> No logo</div>
+                    </div>
+
+                    <div class="btn-group-qr">
+                        <button id="downloadSvgBtn" class="btn-outline"><i class="fas fa-download"></i> SVG</button>
+                        <button id="downloadPngBtn" class="btn-outline"><i class="fas fa-image"></i> PNG</button>
+                        <button id="downloadVcfBtn" class="btn-outline"><i class="fas fa-address-card"></i>
+                            .VCF</button>
+                    </div>
+                    <div class="generate-btn-wrapper">
+                        <button id="generateQrBtn" class="btn-primary"><i class="fas fa-qrcode"></i> Generate QR
+                            Code</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<script src="app.js"></script>
+    <script src="app.js"></script>
 </body>
+
 </html>
