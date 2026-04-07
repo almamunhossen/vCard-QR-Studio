@@ -93,7 +93,7 @@ let currentLogoDataURL = null;
         if (!text || text === "") text = " ";
         const size = 220;
         let qr = qrcode(0, 'M');
-        qr.addData(text);
+        qr.addData(text, 'Byte');  // Force UTF-8 encoding for international characters
         qr.make();
         const moduleCount = qr.getModuleCount();
         const cellSize = size / moduleCount;
@@ -163,6 +163,110 @@ let currentLogoDataURL = null;
         else container.appendChild(newSvg);
     }
     
+    function escapeVCardText(value) {
+        return value
+            .replace(/\\/g, '\\\\')
+            .replace(/\n/g, '\\n')
+            .replace(/;/g, '\\;')
+            .replace(/,/g, '\\,');
+    }
+
+    function addMobileNumberField() {
+        const container = document.getElementById('extraMobileContainer');
+        if (!container) return;
+        const count = container.querySelectorAll('.mobile-extra-row').length + 2;
+        const row = document.createElement('div');
+        row.className = 'input-row mobile-extra-row';
+        row.style.display = 'flex';
+        row.style.gap = '10px';
+        row.style.alignItems = 'center';
+        row.innerHTML = `
+            <label style="flex: 0 0 140px;">Mobile Other ${count}</label>
+            <input type="tel" data-mobile-input placeholder="+966..." class="auto-update-input" style="flex:1;" />
+            <button type="button" class="btn-outline remove-mobile-btn" style="padding:0.55rem 0.9rem; white-space:nowrap;"><i class="fas fa-times"></i></button>
+        `;
+        const removeBtn = row.querySelector('.remove-mobile-btn');
+        removeBtn.addEventListener('click', () => {
+            row.remove();
+            updateMobileLabels();
+            updateQR();
+        });
+        container.appendChild(row);
+    }
+
+    function updateMobileLabels() {
+        document.querySelectorAll('#extraMobileContainer .mobile-extra-row').forEach((row, index) => {
+            const label = row.querySelector('label');
+            if (label) label.textContent = `Mobile Other ${index + 2}`;
+        });
+    }
+
+    function addDigitalField(type) {
+        const configs = {
+            email: {
+                containerId: 'extraEmailContainer',
+                label: 'Email',
+                inputType: 'email',
+                placeholder: 'email@example.com',
+                dataAttribute: 'data-email-input'
+            },
+            website: {
+                containerId: 'extraWebsiteContainer',
+                label: 'Website',
+                inputType: 'url',
+                placeholder: 'https://...',
+                dataAttribute: 'data-website-input'
+            }
+        };
+        const config = configs[type];
+        if (!config) return;
+        const container = document.getElementById(config.containerId);
+        if (!container) return;
+
+        const count = container.querySelectorAll('.digital-extra-row').length + 2;
+        const row = document.createElement('div');
+        row.className = 'input-row digital-extra-row';
+        row.style.display = 'flex';
+        row.style.gap = '10px';
+        row.style.alignItems = 'center';
+        row.innerHTML = `
+            <label style="flex: 0 0 140px;">${config.label} ${count}</label>
+            <input type="${config.inputType}" ${config.dataAttribute} placeholder="${config.placeholder}" class="auto-update-input" style="flex:1;" />
+            <button type="button" class="btn-outline remove-digital-btn" style="padding:0.55rem 0.9rem; white-space:nowrap;"><i class="fas fa-times"></i></button>
+        `;
+        const removeBtn = row.querySelector('.remove-digital-btn');
+        removeBtn.addEventListener('click', () => {
+            row.remove();
+            updateDigitalLabels(type);
+            updateQR();
+        });
+        container.appendChild(row);
+    }
+
+    function updateDigitalLabels(type) {
+        const containerId = type === 'website' ? '#extraWebsiteContainer' : '#extraEmailContainer';
+        document.querySelectorAll(`${containerId} .digital-extra-row`).forEach((row, index) => {
+            const label = row.querySelector('label');
+            if (label) label.textContent = `${type === 'website' ? 'Website' : 'Email'} ${index + 2}`;
+        });
+    }
+
+    function resetCenterIconSettings() {
+        const sizeInput = document.getElementById('centerIconSize');
+        const radiusInput = document.getElementById('iconBgRadius');
+        const eraseInput = document.getElementById('eraseBehindIcon');
+        if (sizeInput) {
+            sizeInput.value = 55;
+            document.getElementById('centerIconSizeValue').innerText = '55px';
+        }
+        if (radiusInput) {
+            radiusInput.value = 12;
+            document.getElementById('iconBgRadiusValue').innerText = '12px';
+        }
+        if (eraseInput) eraseInput.checked = false;
+        updateQR();
+    }
+
     function buildVCard() {
         const fullName = document.getElementById('fullName')?.value.trim() || '';
         const jobTitle = document.getElementById('jobTitle')?.value.trim() || '';
@@ -172,14 +276,14 @@ let currentLogoDataURL = null;
         if (phoneWork && ext) phoneWork += ` ext ${ext}`;
         const phonePrivate = document.getElementById('phonePrivate')?.value.trim() || '';
         const phoneMobile = document.getElementById('phoneMobile')?.value.trim() || '';
-        const phoneMobileOther = document.getElementById('phoneMobileOther')?.value.trim() || '';
         const fax = document.getElementById('faxPrivate')?.value.trim() || '';
-        const email = document.getElementById('vcardEmail')?.value.trim() || '';
-        const website = document.getElementById('vcardWebsite')?.value.trim() || '';
         const wechat = document.getElementById('wechatId')?.value.trim() || '';
         const address = document.getElementById('vcardAddress')?.value.trim() || '';
         const maps = document.getElementById('vcardMapsUrl')?.value.trim() || '';
-        
+
+        const emailInputs = Array.from(document.querySelectorAll('[data-email-input]'));
+        const websiteInputs = Array.from(document.querySelectorAll('[data-website-input]'));
+
         const getSocial = (id, type) => {
             let val = document.getElementById(id)?.value.trim() || '';
             if (!val) return '';
@@ -192,27 +296,45 @@ let currentLogoDataURL = null;
             if (type === 'linkedin') return `https://linkedin.com/in/${val}`;
             return val;
         };
-        
+
+        const safe = (text) => escapeVCardText(text);
         let vc = "BEGIN:VCARD\r\nVERSION:3.0\r\n";
-        vc += fullName ? `FN:${fullName}\r\nN:;${fullName};;;\r\n` : `FN:Contact\r\n`;
-        if(org) vc += `ORG:${org}\r\n`;
-        if(jobTitle) vc += `TITLE:${jobTitle}\r\n`;
-        if(phoneWork) vc += `TEL;TYPE=WORK,VOICE:${phoneWork.replace(/\s/g, '')}\r\n`;
-        if(phonePrivate) vc += `TEL;TYPE=HOME,VOICE:${phonePrivate.replace(/\s/g, '')}\r\n`;
-        if(phoneMobile) vc += `TEL;TYPE=CELL,VOICE:${phoneMobile.replace(/\s/g, '')}\r\n`;
-        if(phoneMobileOther) vc += `TEL;TYPE=CELL,VOICE:${phoneMobileOther.replace(/\s/g, '')}\r\n`;
-        if(fax) vc += `TEL;TYPE=HOME,FAX:${fax.replace(/\s/g, '')}\r\n`;
-        if(email) vc += `EMAIL;TYPE=WORK,INTERNET:${email}\r\n`;
-        if(website) vc += `URL;TYPE=WORK:${website}\r\n`;
-        if(wechat) vc += `IMPP:weixin://dl/chat?${wechat}\r\n`;
-        let wa = getSocial('whatsappInput', 'whatsapp'); if(wa) vc += `URL;TYPE=WhatsApp:${wa}\r\n`;
-        let fb = getSocial('facebookInput', 'facebook'); if(fb) vc += `URL;TYPE=Facebook:${fb}\r\n`;
-        let tw = getSocial('xInput', 'twitter'); if(tw) vc += `URL;TYPE=X:${tw}\r\n`;
-        let yt = getSocial('youtubeInput', 'youtube'); if(yt) vc += `URL;TYPE=YouTube:${yt}\r\n`;
-        let ig = getSocial('instagramInput', 'instagram'); if(ig) vc += `URL;TYPE=Instagram:${ig}\r\n`;
-        let li = getSocial('linkedinInput', 'linkedin'); if(li) vc += `URL;TYPE=LinkedIn:${li}\r\n`;
-        if(address) vc += `ADR;TYPE=WORK:;;${address.replace(/,/g, ';')};;;;\r\n`;
-        if(maps) vc += `URL;TYPE=Map:${maps}\r\n`;
+        if (fullName) {
+            vc += `FN;CHARSET=UTF-8:${safe(fullName)}\r\n`;
+            vc += `N;CHARSET=UTF-8:;${safe(fullName)};;;\r\n`;
+        } else {
+            vc += `FN:Contact\r\n`;
+        }
+        if (org) vc += `ORG;CHARSET=UTF-8:${safe(org)}\r\n`;
+        if (jobTitle) vc += `TITLE;CHARSET=UTF-8:${safe(jobTitle)}\r\n`;
+        if (phoneWork) vc += `TEL;TYPE=WORK,VOICE:${phoneWork.replace(/\s/g, '')}\r\n`;
+        if (phonePrivate) vc += `TEL;TYPE=HOME,VOICE:${phonePrivate.replace(/\s/g, '')}\r\n`;
+
+        const mobileInputs = Array.from(document.querySelectorAll('[data-mobile-input]'));
+        mobileInputs.forEach(input => {
+            const value = input.value.trim();
+            if (value) vc += `TEL;TYPE=CELL,VOICE:${value.replace(/\s/g, '')}\r\n`;
+        });
+
+        emailInputs.forEach(input => {
+            const value = input.value.trim();
+            if (value) vc += `EMAIL;TYPE=WORK,INTERNET:${value}\r\n`;
+        });
+
+        websiteInputs.forEach(input => {
+            const value = input.value.trim();
+            if (value) vc += `URL;TYPE=WORK:${value}\r\n`;
+        });
+        if (fax) vc += `TEL;TYPE=HOME,FAX:${fax.replace(/\s/g, '')}\r\n`;
+        if (wechat) vc += `IMPP:weixin://dl/chat?${encodeURIComponent(wechat)}\r\n`;
+        let wa = getSocial('whatsappInput', 'whatsapp'); if (wa) vc += `URL;TYPE=WhatsApp:${wa}\r\n`;
+        let fb = getSocial('facebookInput', 'facebook'); if (fb) vc += `URL;TYPE=Facebook:${fb}\r\n`;
+        let tw = getSocial('xInput', 'twitter'); if (tw) vc += `URL;TYPE=X:${tw}\r\n`;
+        let yt = getSocial('youtubeInput', 'youtube'); if (yt) vc += `URL;TYPE=YouTube:${yt}\r\n`;
+        let ig = getSocial('instagramInput', 'instagram'); if (ig) vc += `URL;TYPE=Instagram:${ig}\r\n`;
+        let li = getSocial('linkedinInput', 'linkedin'); if (li) vc += `URL;TYPE=LinkedIn:${li}\r\n`;
+        if (address) vc += `ADR;TYPE=WORK:;;${safe(address).replace(/,/g, ';')};;;;\r\n`;
+        if (maps) vc += `URL;TYPE=Map:${maps}\r\n`;
         vc += "END:VCARD\r\n";
         return vc;
     }
@@ -273,11 +395,15 @@ let currentLogoDataURL = null;
     }
     
     function setupAutoUpdate() {
-        const allInputs = document.querySelectorAll('.auto-update-input');
-        allInputs.forEach(input => {
-            input.addEventListener('input', debouncedUpdate);
-            input.addEventListener('change', debouncedUpdate);
-        });
+        const appContainer = document.querySelector('.app-container');
+        if (appContainer) {
+            appContainer.addEventListener('input', (event) => {
+                if (event.target.matches('.auto-update-input')) debouncedUpdate();
+            });
+            appContainer.addEventListener('change', (event) => {
+                if (event.target.matches('.auto-update-input')) debouncedUpdate();
+            });
+        }
         document.getElementById('logoSize')?.addEventListener('input', () => updateQR());
         document.getElementById('eraseBehindLogo')?.addEventListener('change', () => updateQR());
         document.getElementById('centerIconSize')?.addEventListener('input', () => updateQR());
@@ -486,5 +612,9 @@ let currentLogoDataURL = null;
         document.getElementById('downloadPngBtn')?.addEventListener('click', downloadPNG);
         document.getElementById('downloadVcfBtn')?.addEventListener('click', downloadVCF);
         document.getElementById('generateQrBtn')?.addEventListener('click', () => updateQR());
+        document.getElementById('addMobileNumberBtn')?.addEventListener('click', () => addMobileNumberField());
+        document.getElementById('addEmailFieldBtn')?.addEventListener('click', () => addDigitalField('email'));
+        document.getElementById('addWebsiteFieldBtn')?.addEventListener('click', () => addDigitalField('website'));
+        document.getElementById('resetCenterIconBtn')?.addEventListener('click', () => resetCenterIconSettings());
         updateQR();
     });

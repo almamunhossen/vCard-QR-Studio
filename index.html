@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 
 <head>
     <meta charset="UTF-8">
@@ -78,17 +78,19 @@
                         <div id="phoneAcc" class="accordion-content">
                             <div class="grid-2">
                                 <div class="input-row"><label>Phone (Work)</label><input type="tel" id="phoneWork"
-                                        placeholder="+966..." class="auto-update-input"></div>
+                                        placeholder="+880..." class="auto-update-input"></div>
                                 <div class="input-row"><label>Extension</label><input type="text" id="phoneWorkExt"
                                         placeholder="Ext. 123" class="auto-update-input"></div>
                                 <div class="input-row"><label>Phone (Private)</label><input type="tel" id="phonePrivate"
-                                        placeholder="+966..." class="auto-update-input"></div>
+                                        placeholder="+880..." class="auto-update-input"></div>
                                 <div class="input-row"><label>Fax</label><input type="tel" id="faxPrivate"
                                         placeholder="Fax number" class="auto-update-input"></div>
                                 <div class="input-row"><label>Mobile</label><input type="tel" id="phoneMobile"
-                                        placeholder="+966..." class="auto-update-input"></div>
-                                <div class="input-row"><label>Mobile Other</label><input type="tel"
-                                        id="phoneMobileOther" placeholder="+966..." class="auto-update-input"></div>
+                                        placeholder="+880..." class="auto-update-input" data-mobile-input></div>
+                            </div>
+                            <div id="extraMobileContainer"></div>
+                            <div style="margin-top: 1rem;" class="button-add-mobile">
+                                <button type="button" id="addMobileNumberBtn" class="btn-outline"><i class="fas fa-plus"></i> Add Mobile Number</button>
                             </div>
                         </div>
                     </div>
@@ -98,9 +100,15 @@
                         <div id="digitalAcc" class="accordion-content">
                             <div class="input-row"><label><i class="fas fa-envelope"></i> Email</label><input
                                     type="email" id="vcardEmail" placeholder="email@example.com"
-                                    class="auto-update-input"></div>
+                                    class="auto-update-input" data-email-input></div>
+                            <div id="extraEmailContainer"></div>
                             <div class="input-row"><label><i class="fas fa-globe"></i> Website</label><input type="url"
-                                    id="vcardWebsite" placeholder="https://..." class="auto-update-input"></div>
+                                    id="vcardWebsite" placeholder="https://..." class="auto-update-input" data-website-input></div>
+                            <div id="extraWebsiteContainer"></div>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 0.75rem;" class="center-icon-controls">
+                                <button type="button" id="addEmailFieldBtn" class="btn-outline"><i class="fas fa-plus"></i> Add Email</button>
+                                <button type="button" id="addWebsiteFieldBtn" class="btn-outline"><i class="fas fa-plus"></i> Add Website</button>
+                            </div>
                             <div class="input-row"><label><i class="fab fa-weixin"></i> WeChat ID</label><input
                                     type="text" id="wechatId" placeholder="wechat_id" class="auto-update-input"></div>
                         </div>
@@ -111,7 +119,7 @@
                                 class="fas fa-chevron-down toggle-icon"></i></div>
                         <div id="socialVcardAcc" class="accordion-content">
                             <div class="input-row"><label><i class="fab fa-whatsapp"></i> WhatsApp</label><input
-                                    type="text" id="whatsappInput" placeholder="+966..." class="auto-update-input">
+                                    type="text" id="whatsappInput" placeholder="+880..." class="auto-update-input">
                             </div>
                             <div class="input-row"><label><i class="fab fa-facebook"></i> Facebook</label><input
                                     type="text" id="facebookInput" placeholder="username" class="auto-update-input">
@@ -183,22 +191,22 @@
                     <div class="location-search-container">
                         <div class="input-row"><label><i class="fas fa-search-location"></i> Search
                                 Address</label><input type="text" id="addressSearch"
-                                placeholder="e.g., 5th Avenue, New York" class="auto-update-input"><button
+                                placeholder="e.g., 5th Bangladesh, Noakhali" class="auto-update-input"><button
                                 id="searchAddressBtn" class="search-button"><i class="fas fa-map-pin"></i> Search & Get
                                 Coordinates</button></div>
                         <div class="grid-2">
                             <div class="input-row"><label><i class="fas fa-arrow-up"></i> Latitude</label><input
-                                    type="text" id="latitude" placeholder="e.g., 40.7128" class="auto-update-input">
+                                    type="text" id="latitude" placeholder="e.g., 22.86530" class="auto-update-input">
                             </div>
                             <div class="input-row"><label><i class="fas fa-arrow-right"></i> Longitude</label><input
-                                    type="text" id="longitude" placeholder="e.g., -74.0060" class="auto-update-input">
+                                    type="text" id="longitude" placeholder="e.g., 91.0970" class="auto-update-input">
                             </div>
                         </div>
                         <div id="locationStatus" class="location-status"><i class="fas fa-info-circle"></i> Enter an
                             address and click search</div>
                     </div>
                     <div class="google-map-container"><iframe id="googleMapIframe"
-                            src="https://maps.google.com/maps?q=40.7128,-74.0060&z=12&output=embed" allowfullscreen=""
+                            src="https://maps.google.com/maps?q=22.865303681449483,-91.09705754184878=12&output=embed" allowfullscreen=""
                             loading="lazy"></iframe></div>
                     <div class="info-badge" style="margin-top: 12px;"><i class="fas fa-map-pin"></i> Scan QR code to
                         open location in maps app</div>
@@ -339,9 +347,14 @@
                         <div class="center-icon-controls">
                             <div class="info-badge"><i class="fas fa-info-circle"></i> Select an icon to display in QR
                                 center</div>
-                            <button id="clearCenterIconBtn" class="btn-outline"
-                                style="padding: 4px 12px; font-size: 0.7rem;"><i class="fas fa-trash"></i>
-                                Clear</button>
+                            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                                <button id="clearCenterIconBtn" class="btn-outline"
+                                    style="padding: 4px 12px; font-size: 0.7rem;"><i class="fas fa-trash"></i>
+                                    Clear</button>
+                                <button id="resetCenterIconBtn" class="btn-outline"
+                                    style="padding: 4px 12px; font-size: 0.7rem;"><i class="fas fa-undo"></i>
+                                    Reset</button>
+                            </div>
                         </div>
                         <div class="icon-selector-grid" id="centerIconSelectorGrid">
                             <div class="icon-option" data-icon="fas fa-address-card"><i
