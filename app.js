@@ -120,23 +120,36 @@ let currentLogoDataURL = null;
             const iconSizeVal = parseInt(document.getElementById('centerIconSize')?.value || 55);
             const eraseBg = document.getElementById('eraseBehindIcon')?.checked;
             const bgRadius = parseInt(document.getElementById('iconBgRadius')?.value || 12);
-            const fontSize = iconSizeVal * 0.7;
             const iconInfo = iconMap[currentCenterIconClass];
             const iconChar = iconInfo.char;
-            const fontFamily = iconInfo.family;
+            const fontFamily = iconInfo.family.replace(/['"]/g, '');
             const fontWeight = iconInfo.weight;
             
             const bgPadding = 8;
             const bgWidth = iconSizeVal + bgPadding * 2;
             const bgHeight = iconSizeVal + bgPadding * 2;
-            const bgX = centerX - bgWidth/2;
-            const bgY = centerY - bgHeight/2;
+            const bgX = centerX - bgWidth / 2;
+            const bgY = centerY - bgHeight / 2;
             
             if (eraseBg) {
                 svg += `<rect x="${bgX}" y="${bgY}" width="${bgWidth}" height="${bgHeight}" fill="#FFFFFF" rx="${bgRadius}" />`;
             }
-            // Fix: Use single quotes for font-family to avoid attribute value quoting issues
-            svg += `<text x="${centerX}" y="${centerY + fontSize * 0.3}" text-anchor="middle" font-family='${fontFamily}' font-size="${fontSize}" fill="${qrDarkColor}" font-weight="${fontWeight}">${iconChar}</text>`;
+
+            const canvasSize = Math.max(iconSizeVal, 96);
+            const iconCanvas = document.createElement('canvas');
+            iconCanvas.width = canvasSize;
+            iconCanvas.height = canvasSize;
+            const iconCtx = iconCanvas.getContext('2d');
+            iconCtx.clearRect(0, 0, canvasSize, canvasSize);
+            iconCtx.textAlign = 'center';
+            iconCtx.textBaseline = 'middle';
+            iconCtx.fillStyle = qrDarkColor;
+            iconCtx.font = `${fontWeight} ${iconSizeVal}px ${fontFamily}`;
+            iconCtx.fillText(iconChar, canvasSize / 2, canvasSize / 2);
+            const iconDataUrl = iconCanvas.toDataURL('image/png');
+            const iconX = centerX - iconSizeVal / 2;
+            const iconY = centerY - iconSizeVal / 2;
+            svg += `<image href="${iconDataUrl}" x="${iconX}" y="${iconY}" width="${iconSizeVal}" height="${iconSizeVal}" preserveAspectRatio="xMidYMid meet" />`;
         }
         
         // Draw logo on top if present
@@ -182,7 +195,7 @@ let currentLogoDataURL = null;
         row.style.alignItems = 'center';
         row.innerHTML = `
             <label style="flex: 0 0 140px;">Mobile Other ${count}</label>
-            <input type="tel" data-mobile-input placeholder="+966..." class="auto-update-input" style="flex:1;" />
+            <input type="tel" data-mobile-input placeholder="+880..." class="auto-update-input" style="flex:1;" />
             <button type="button" class="btn-outline remove-mobile-btn" style="padding:0.55rem 0.9rem; white-space:nowrap;"><i class="fas fa-times"></i></button>
         `;
         const removeBtn = row.querySelector('.remove-mobile-btn');
