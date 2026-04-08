@@ -89,11 +89,25 @@ let currentLogoDataURL = null;
         return uri;
     }
     
+    function normalizeUnicodeText(text) {
+        if (typeof text !== 'string') return text;
+        return text.normalize ? text.normalize('NFC') : text;
+    }
+
+    function utf8ByteString(text) {
+        const normalized = normalizeUnicodeText(text);
+        if (typeof TextEncoder !== 'undefined') {
+            const bytes = new TextEncoder().encode(normalized);
+            return Array.from(bytes).map(byte => String.fromCharCode(byte)).join('');
+        }
+        return unescape(encodeURIComponent(normalized));
+    }
+
     function renderQRWithLogoAndIcon(text) {
         if (!text || text === "") text = " ";
         const size = 220;
         let qr = qrcode(0, 'M');
-        qr.addData(text, 'Byte');  // Force UTF-8 encoding for international characters
+        qr.addData(utf8ByteString(text), 'Byte');  // Provide raw UTF-8 bytes for QR byte mode
         qr.make();
         const moduleCount = qr.getModuleCount();
         const cellSize = size / moduleCount;
@@ -316,7 +330,8 @@ let currentLogoDataURL = null;
             vc += `FN;CHARSET=UTF-8:${safe(fullName)}\r\n`;
             vc += `N;CHARSET=UTF-8:;${safe(fullName)};;;\r\n`;
         } else {
-            vc += `FN:Contact\r\n`;
+            vc += `FN;CHARSET=UTF-8:Contact\r\n`;
+            vc += `N;CHARSET=UTF-8:;;;;\r\n`;
         }
         if (org) vc += `ORG;CHARSET=UTF-8:${safe(org)}\r\n`;
         if (jobTitle) vc += `TITLE;CHARSET=UTF-8:${safe(jobTitle)}\r\n`;
@@ -339,14 +354,14 @@ let currentLogoDataURL = null;
             if (value) vc += `URL;TYPE=WORK:${value}\r\n`;
         });
         if (fax) vc += `TEL;TYPE=HOME,FAX:${fax.replace(/\s/g, '')}\r\n`;
-        if (wechat) vc += `IMPP:weixin://dl/chat?${encodeURIComponent(wechat)}\r\n`;
+        if (wechat) vc += `IMPP;CHARSET=UTF-8:weixin://dl/chat?${encodeURIComponent(wechat)}\r\n`;
         let wa = getSocial('whatsappInput', 'whatsapp'); if (wa) vc += `URL;TYPE=WhatsApp:${wa}\r\n`;
         let fb = getSocial('facebookInput', 'facebook'); if (fb) vc += `URL;TYPE=Facebook:${fb}\r\n`;
         let tw = getSocial('xInput', 'twitter'); if (tw) vc += `URL;TYPE=X:${tw}\r\n`;
         let yt = getSocial('youtubeInput', 'youtube'); if (yt) vc += `URL;TYPE=YouTube:${yt}\r\n`;
         let ig = getSocial('instagramInput', 'instagram'); if (ig) vc += `URL;TYPE=Instagram:${ig}\r\n`;
         let li = getSocial('linkedinInput', 'linkedin'); if (li) vc += `URL;TYPE=LinkedIn:${li}\r\n`;
-        if (address) vc += `ADR;TYPE=WORK:;;${safe(address).replace(/,/g, ';')};;;;\r\n`;
+        if (address) vc += `ADR;TYPE=WORK;CHARSET=UTF-8:;;${safe(address).replace(/,/g, ';')};;;;\r\n`;
         if (maps) vc += `URL;TYPE=Map:${maps}\r\n`;
         vc += "END:VCARD\r\n";
         return vc;
@@ -588,7 +603,7 @@ let currentLogoDataURL = null;
     
     function downloadVCF() {
         const vcardData = buildVCard();
-        const blob = new Blob([vcardData], {type: 'text/vcard;charset=utf-8'});
+        const blob = new Blob(['\ufeff', vcardData], {type: 'text/vcard;charset=utf-8'});
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
