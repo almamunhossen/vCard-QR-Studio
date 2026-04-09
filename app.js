@@ -1,30 +1,106 @@
 let currentLogoDataURL = null;
-    let currentCenterIconClass = null;
-    let updateTimeout = null;
-    let currentCrypto = 'bitcoin';
-    
-    // Font Awesome icon mapping to actual unicode characters and font families
-    const iconMap = {
-        'fas fa-address-card': { char: '\uf2bb', family: '"Font Awesome 6 Free"', weight: 900 },
-        'fas fa-link': { char: '\uf0c1', family: '"Font Awesome 6 Free"', weight: 900 },
-        'fab fa-bitcoin': { char: '\uf15a', family: '"Font Awesome 6 Brands"', weight: 400 },
-        'fab fa-facebook': { char: '\uf09a', family: '"Font Awesome 6 Brands"', weight: 400 },
-        'fab fa-twitter': { char: '\uf099', family: '"Font Awesome 6 Brands"', weight: 400 },
-        'fab fa-youtube': { char: '\uf167', family: '"Font Awesome 6 Brands"', weight: 400 },
-        'fab fa-instagram': { char: '\uf16d', family: '"Font Awesome 6 Brands"', weight: 400 },
-        'fab fa-linkedin': { char: '\uf08c', family: '"Font Awesome 6 Brands"', weight: 400 },
-        'fab fa-whatsapp': { char: '\uf232', family: '"Font Awesome 6 Brands"', weight: 400 },
-        'fab fa-github': { char: '\uf09b', family: '"Font Awesome 6 Brands"', weight: 400 },
-        'fab fa-behance': { char: '\uf1b4', family: '"Font Awesome 6 Brands"', weight: 400 },
-        'fas fa-graduation-cap': { char: '\uf19d', family: '"Font Awesome 6 Free"', weight: 900 },
-        'fas fa-paragraph': { char: '\uf1dd', family: '"Font Awesome 6 Free"', weight: 900 },
-        'fas fa-envelope': { char: '\uf0e0', family: '"Font Awesome 6 Free"', weight: 900 },
-        'fas fa-phone': { char: '\uf095', family: '"Font Awesome 6 Free"', weight: 900 },
-        'fas fa-comment-dots': { char: '\uf27a', family: '"Font Awesome 6 Free"', weight: 900 },
-        'fas fa-wifi': { char: '\uf1eb', family: '"Font Awesome 6 Free"', weight: 900 },
-        'fas fa-map-marker-alt': { char: '\uf3c5', family: '"Font Awesome 6 Free"', weight: 900 },
-        'fas fa-calendar-alt': { char: '\uf073', family: '"Font Awesome 6 Free"', weight: 900 }
-    };
+let currentCenterIconClass = null;
+let updateTimeout = null;
+let currentCrypto = 'bitcoin';
+
+// SVG icon mapping to local files
+const iconMap = {
+    'address-card': { file: 'images/icons/address-card.svg', name: 'Address Card' },
+    'behance': { file: 'images/icons/behance.svg', name: 'Behance' },
+    'bitcoin': { file: 'images/icons/bitcoin.svg', name: 'Bitcoin' },
+    'codepen': { file: 'images/icons/codepen-logo.svg', name: 'CodePen' },
+    'dribbble': { file: 'images/icons/dribbble.svg', name: 'Dribbble' },
+    'email': { file: 'images/icons/Email.svg', name: 'Email' },
+    'event': { file: 'images/icons/Event.svg', name: 'Event' },
+    'flights': { file: 'images/icons/flights.svg', name: 'Flights' },
+    'hajj-umrah': { file: 'images/icons/hajj-umrah.svg', name: 'Hajj Umrah' },
+    'holidays': { file: 'images/icons/holidays.svg', name: 'Holidays' },
+    'transfers': { file: 'images/icons/transfers.svg', name: 'Transfers' },
+    'facebook': { file: 'images/icons/Facebook.svg', name: 'Facebook' },
+    'github': { file: 'images/icons/GitHub.svg', name: 'GitHub' },
+    'github-1': { file: 'images/icons/github-1.svg', name: 'GitHub Alt' },
+    'hikmah': { file: 'images/icons/hikmah.svg', name: 'Hikmah' },
+    'home': { file: 'images/icons/home.svg', name: 'Home' },
+    'instagram': { file: 'images/icons/Instagram.svg', name: 'Instagram' },
+    'link': { file: 'images/icons/link.svg', name: 'Link' },
+    'linkedin': { file: 'images/icons/linkedIn.svg', name: 'LinkedIn' },
+    'location': { file: 'images/icons/Location.svg', name: 'Location' },
+    'message': { file: 'images/icons/message.svg', name: 'Message' },
+    'mobile': { file: 'images/icons/mobile.svg', name: 'Mobile' },
+    'person': { file: 'images/icons/person.svg', name: 'Person' },
+    'pinterest': { file: 'images/icons/pinterest.svg', name: 'Pinterest' },
+    'sms': { file: 'images/icons/sms.svg', name: 'SMS' },
+    'snapchat': { file: 'images/icons/snapchat.svg', name: 'Snapchat' },
+    'telephone': { file: 'images/icons/telephone.svg', name: 'Telephone' },
+    'telephone-1': { file: 'images/icons/telephone-1.svg', name: 'Telephone 1' },
+    'telephone-3': { file: 'images/icons/telephone-3.svg', name: 'Telephone 3' },
+    'twitter': { file: 'images/icons/twitter.svg', name: 'Twitter' },
+    'whatsapp': { file: 'images/icons/whatsapp.svg', name: 'WhatsApp' },
+    'wifi': { file: 'images/icons/wifi.svg', name: 'WiFi' },
+    'wifi-logo': { file: 'images/icons/WiFi_Logo.svg', name: 'WiFi Logo' },
+    'x': { file: 'images/icons/x.svg', name: 'X' },
+    'youtube': { file: 'images/icons/YouTube.svg', name: 'YouTube' }
+};
+
+// Load SVG icons
+let loadedSvgIcons = {};
+
+const getElement = (id) => document.getElementById(id);
+const getInputValue = (id) => getElement(id)?.value.trim() || '';
+const normalizeUrl = (value, fallbackUrl = '') => {
+    if (!value) return fallbackUrl;
+    if (!/^https?:\/\//i.test(value)) value = 'https://' + value;
+    return value;
+};
+const formatSocialUsername = (value, baseUrl) => {
+    if (!value) return baseUrl;
+    if (/^https?:\/\//i.test(value)) return value;
+    return baseUrl + value.replace(/^@/, '');
+};
+const formatWhatsAppLink = (value) => {
+    const number = (value || '').replace(/[^0-9+]/g, '');
+    if (!number) return 'https://api.whatsapp.com/send?phone=';
+    return `https://api.whatsapp.com/send?phone=${number.replace('+', '')}`;
+};
+const makeMailtoLink = (email, subject, message) => {
+    let mailto = `mailto:${email || ''}`;
+    const params = [];
+    if (subject) params.push(`subject=${encodeURIComponent(subject)}`);
+    if (message) params.push(`body=${encodeURIComponent(message)}`);
+    if (params.length) mailto += `?${params.join('&')}`;
+    return mailto;
+};
+const makeSmsLink = (number, message) => {
+    const body = message ? `?body=${encodeURIComponent(message)}` : '';
+    return `sms:${number || ''}${body}`;
+};
+const makeWifiString = (ssid, password, encryption) => {
+    if (!ssid) return 'WIFI:S:;T:nopass;;';
+    const encType = encryption === 'WEP' ? 'WEP' : encryption === 'nopass' ? 'nopass' : 'WPA';
+    return `WIFI:S:${ssid};T:${encType};P:${password};;`;
+};
+const createDownloadLink = (href, filename) => {
+    const a = document.createElement('a');
+    a.href = href;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+};
+
+function loadSvgIcons() {
+    const promises = Object.entries(iconMap).map(([iconKey, item]) => {
+        return fetch(item.file)
+            .then(response => response.text())
+            .then(svgText => {
+                loadedSvgIcons[iconKey] = svgText;
+            })
+            .catch(error => {
+                console.warn(`Failed to load SVG icon ${iconKey}:`, error);
+            });
+    });
+    return Promise.all(promises);
+}
     
     // ========== ALL EXISTING FUNCTIONS (preserved) ==========
     async function searchAddress(address) {
@@ -61,14 +137,14 @@ let currentLogoDataURL = null;
     }
     
     function setupCryptoSelector() {
-        const options = document.querySelectorAll('.crypto-option');
-        options.forEach(opt => {
+        document.querySelectorAll('.crypto-option').forEach(opt => {
+            const radio = opt.querySelector('input[type="radio"]');
             opt.addEventListener('click', () => {
-                const radio = opt.querySelector('input[type="radio"]');
                 if (radio) { radio.checked = true; currentCrypto = radio.value; updateQR(); }
             });
-            const radio = opt.querySelector('input[type="radio"]');
-            if (radio) radio.addEventListener('change', (e) => { if(e.target.checked) { currentCrypto = e.target.value; updateQR(); } });
+            if (radio) radio.addEventListener('change', (e) => {
+                if (e.target.checked) { currentCrypto = e.target.value; updateQR(); }
+            });
         });
     }
     
@@ -129,15 +205,11 @@ let currentLogoDataURL = null;
         const centerX = size / 2;
         const centerY = size / 2;
         
-        // Draw center icon if selected (using actual Font Awesome character)
-        if (currentCenterIconClass && iconMap[currentCenterIconClass]) {
+        // Draw center icon if selected (using SVG)
+        if (currentCenterIconClass && loadedSvgIcons[currentCenterIconClass]) {
             const iconSizeVal = parseInt(document.getElementById('centerIconSize')?.value || 55);
             const eraseBg = document.getElementById('eraseBehindIcon')?.checked;
             const bgRadius = parseInt(document.getElementById('iconBgRadius')?.value || 12);
-            const iconInfo = iconMap[currentCenterIconClass];
-            const iconChar = iconInfo.char;
-            const fontFamily = iconInfo.family.replace(/['"]/g, '');
-            const fontWeight = iconInfo.weight;
             
             const bgPadding = 8;
             const bgWidth = iconSizeVal + bgPadding * 2;
@@ -148,22 +220,46 @@ let currentLogoDataURL = null;
             if (eraseBg) {
                 svg += `<rect x="${bgX}" y="${bgY}" width="${bgWidth}" height="${bgHeight}" fill="#FFFFFF" rx="${bgRadius}" />`;
             }
-
-            const canvasSize = Math.max(iconSizeVal, 96);
-            const iconCanvas = document.createElement('canvas');
-            iconCanvas.width = canvasSize;
-            iconCanvas.height = canvasSize;
-            const iconCtx = iconCanvas.getContext('2d');
-            iconCtx.clearRect(0, 0, canvasSize, canvasSize);
-            iconCtx.textAlign = 'center';
-            iconCtx.textBaseline = 'middle';
-            iconCtx.fillStyle = qrDarkColor;
-            iconCtx.font = `${fontWeight} ${iconSizeVal}px ${fontFamily}`;
-            iconCtx.fillText(iconChar, canvasSize / 2, canvasSize / 2);
-            const iconDataUrl = iconCanvas.toDataURL('image/png');
+            
+            // Embed SVG icon directly
+            const iconSvg = loadedSvgIcons[currentCenterIconClass];
             const iconX = centerX - iconSizeVal / 2;
             const iconY = centerY - iconSizeVal / 2;
-            svg += `<image href="${iconDataUrl}" x="${iconX}" y="${iconY}" width="${iconSizeVal}" height="${iconSizeVal}" preserveAspectRatio="xMidYMid meet" />`;
+            
+            // Create a group for the icon with proper scaling and positioning
+            const parser = new DOMParser();
+            const svgDoc = parser.parseFromString(iconSvg, 'image/svg+xml');
+            const svgElement = svgDoc.documentElement;
+            const viewBox = svgElement.getAttribute('viewBox');
+            let scale = iconSizeVal / 512; // default scale
+            
+            if (viewBox) {
+                const [x, y, width, height] = viewBox.split(' ').map(Number);
+                const maxDim = Math.max(width, height);
+                scale = iconSizeVal / maxDim;
+            }
+            
+            svg += `<g transform="translate(${iconX}, ${iconY}) scale(${scale})" fill="${qrDarkColor}">`;
+            // Extract all paths from the SVG and add them
+            const pathElements = svgDoc.querySelectorAll('path');
+            if (pathElements.length > 0) {
+                pathElements.forEach(pathElement => {
+                    const d = pathElement.getAttribute('d');
+                    if (d) {
+                        svg += `<path d="${d}" />`;
+                    }
+                });
+            } else {
+                // Fallback: try to extract other SVG elements like circles, rects, etc.
+                const allElements = svgDoc.querySelectorAll('*');
+                allElements.forEach(element => {
+                    if (element.tagName.toLowerCase() !== 'svg') {
+                        const attrs = Array.from(element.attributes).map(attr => `${attr.name}="${attr.value}"`).join(' ');
+                        svg += `<${element.tagName} ${attrs} />`;
+                    }
+                });
+            }
+            svg += `</g>`;
         }
         
         // Draw logo on top if present
@@ -302,7 +398,6 @@ let currentLogoDataURL = null;
         const ext = document.getElementById('phoneWorkExt')?.value.trim() || '';
         if (phoneWork && ext) phoneWork += ` ext ${ext}`;
         const phonePrivate = document.getElementById('phonePrivate')?.value.trim() || '';
-        const phoneMobile = document.getElementById('phoneMobile')?.value.trim() || '';
         const fax = document.getElementById('faxPrivate')?.value.trim() || '';
         const wechat = document.getElementById('wechatId')?.value.trim() || '';
         const address = document.getElementById('vcardAddress')?.value.trim() || '';
@@ -369,31 +464,35 @@ let currentLogoDataURL = null;
     
     function getCurrentQRText() {
         const activePanel = document.querySelector('.tab-panel.active-panel')?.id;
-        if (activePanel === 'vcard-tab') return buildVCard();
-        if (activePanel === 'url-tab') { let url = document.getElementById('urlInput')?.value; if (!url.startsWith('http')) url = 'https://' + url; return url || 'https://'; }
-        if (activePanel === 'crypto-tab') return getCryptoURI() || 'bitcoin:';
-        if (activePanel === 'location-tab') { let lat = document.getElementById('latitude')?.value.trim(); let lng = document.getElementById('longitude')?.value.trim(); return (lat && lng) ? `geo:${lat},${lng}` : 'geo:0,0'; }
-        if (activePanel === 'facebook-tab') { let url = document.getElementById('facebookUrlInput')?.value; if (!url.startsWith('http')) url = 'https://' + url; return url || 'https://facebook.com'; }
-        if (activePanel === 'x-tab') { let url = document.getElementById('xUrlInput')?.value; if (!url.startsWith('http')) url = 'https://' + url; return url || 'https://x.com'; }
-        if (activePanel === 'youtube-tab') { let url = document.getElementById('youtubeUrlInput')?.value; if (!url.startsWith('http')) url = 'https://' + url; return url || 'https://youtube.com'; }
-        if (activePanel === 'instagram-tab') { let url = document.getElementById('instagramUrlInput')?.value; if (!url.startsWith('http')) url = 'https://' + url; return url || 'https://instagram.com'; }
-        if (activePanel === 'linkedin-tab') { let url = document.getElementById('linkedinUrlInput')?.value; if (!url.startsWith('http')) url = 'https://' + url; return url || 'https://linkedin.com'; }
-        if (activePanel === 'whatsapp-tab') { 
-            let num = document.getElementById('whatsappNumber')?.value.replace(/[^0-9+]/g, '');
-            if (!num) return 'https://api.whatsapp.com/send?phone=';
-            let digits = num.replace('+', '');
-            return `https://api.whatsapp.com/send?phone=${digits}`;
-        }
-        if (activePanel === 'github-tab') { let url = document.getElementById('githubUrlInput')?.value; if (!url.startsWith('http')) url = 'https://' + url; return url || 'https://github.com'; }
-        if (activePanel === 'behance-tab') { let url = document.getElementById('behanceUrlInput')?.value; if (!url.startsWith('http')) url = 'https://' + url; return url || 'https://behance.net'; }
-        if (activePanel === 'hikmah-tab') { let url = document.getElementById('hikmahUrlInput')?.value; if (!url.startsWith('http') && url) url = 'https://' + url; return url || 'https://hikmah.net/@'; }
-        if (activePanel === 'text-tab') return document.getElementById('textInput')?.value || ' ';
-        if (activePanel === 'email-tab') { let email = document.getElementById('emailAddress')?.value; let subj = document.getElementById('emailSubject')?.value; let msg = document.getElementById('emailMessage')?.value; let mailto = `mailto:${email}`; if (subj || msg) mailto += `?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(msg)}`; return mailto || 'mailto:'; }
-        if (activePanel === 'phone-tab') return `tel:${document.getElementById('phoneNumber')?.value || ''}`;
-        if (activePanel === 'sms-tab') { let num = document.getElementById('smsNumber')?.value; let msg = document.getElementById('smsMessage')?.value; return `sms:${num}${msg ? '?body='+encodeURIComponent(msg) : ''}`; }
-        if (activePanel === 'wifi-tab') { let ssid = document.getElementById('wifiSsid')?.value.trim(); if (!ssid) return 'WIFI:S:;T:nopass;;'; let pass = document.getElementById('wifiPassword')?.value; let enc = document.getElementById('wifiEncryption')?.value; let encType = enc === 'WEP' ? 'WEP' : (enc === 'nopass' ? 'nopass' : 'WPA'); return `WIFI:S:${ssid};T:${encType};P:${pass};;`; }
-        if (activePanel === 'event-tab') return buildEventVCalendar();
-        return ' ';
+        const normalizePanelUrl = (id, fallback) => normalizeUrl(getInputValue(id), fallback);
+        const handlers = {
+            'vcard-tab': buildVCard,
+            'url-tab': () => normalizePanelUrl('urlInput', 'https://'),
+            'crypto-tab': () => getCryptoURI() || 'bitcoin:',
+            'location-tab': () => {
+                const lat = getInputValue('latitude');
+                const lng = getInputValue('longitude');
+                return (lat && lng) ? `geo:${lat},${lng}` : 'geo:0,0';
+            },
+            'facebook-tab': () => formatSocialUsername(getInputValue('facebookUrlInput'), 'https://facebook.com/'),
+            'x-tab': () => formatSocialUsername(getInputValue('xUrlInput'), 'https://x.com/'),
+            'youtube-tab': () => formatSocialUsername(getInputValue('youtubeUrlInput'), 'https://youtube.com/@'),
+            'instagram-tab': () => formatSocialUsername(getInputValue('instagramUrlInput'), 'https://instagram.com/'),
+            'linkedin-tab': () => formatSocialUsername(getInputValue('linkedinUrlInput'), 'https://linkedin.com/in/'),
+            'whatsapp-tab': () => formatWhatsAppLink(getInputValue('whatsappNumber')),
+            'github-tab': () => normalizePanelUrl('githubUrlInput', 'https://github.com'),
+            'behance-tab': () => formatSocialUsername(getInputValue('behanceUrlInput'), 'https://behance.net/'),
+            'hikmah-tab': () => formatSocialUsername(getInputValue('hikmahUrlInput'), 'https://hikmah.net/@'),
+            'pinterest-tab': () => normalizeUrl(getInputValue('pinUrlInput'), 'https://pinterest.com/'),
+            'codepen-tab': () => normalizeUrl(getInputValue('codepenUrlInput'), 'https://codepen.io/'),
+            'text-tab': () => getInputValue('textInput') || ' ',
+            'email-tab': () => makeMailtoLink(getInputValue('emailAddress'), getInputValue('emailSubject'), getInputValue('emailMessage')),
+            'phone-tab': () => `tel:${getInputValue('phoneNumber')}`,
+            'sms-tab': () => makeSmsLink(getInputValue('smsNumber'), getInputValue('smsMessage')),
+            'wifi-tab': () => makeWifiString(getInputValue('wifiSsid'), getInputValue('wifiPassword'), getInputValue('wifiEncryption')),
+            'event-tab': buildEventVCalendar
+        };
+        return (handlers[activePanel] || (() => ' '))();
     }
     
     function buildEventVCalendar() {
@@ -491,9 +590,9 @@ let currentLogoDataURL = null;
             icon.addEventListener('click', () => {
                 icons.forEach(i => i.classList.remove('selected'));
                 icon.classList.add('selected');
-                const iconClass = icon.getAttribute('data-icon');
-                currentCenterIconClass = iconClass;
-                document.getElementById('centerIconStatus').innerHTML = `<i class="${iconClass}"></i> Selected: ${icon.querySelector('span').innerText}`;
+                const iconKey = icon.getAttribute('data-icon');
+                currentCenterIconClass = iconKey;
+                document.getElementById('centerIconStatus').innerHTML = `<i class="fas fa-icons"></i> Selected: ${icon.querySelector('span').innerText}`;
                 updateQR();
             });
         });
@@ -565,15 +664,10 @@ let currentLogoDataURL = null;
         }
         const blob = new Blob([source], {type: 'image/svg+xml'});
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'qrcode.svg';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        createDownloadLink(url, 'qrcode.svg');
         URL.revokeObjectURL(url);
     }
-    
+
     function downloadPNG() {
         const currentSvg = document.querySelector('#svgQrContainer svg');
         if (!currentSvg) return;
@@ -589,13 +683,7 @@ let currentLogoDataURL = null;
             canvas.width = img.width;
             canvas.height = img.height;
             ctx.drawImage(img, 0, 0);
-            const pngUrl = canvas.toDataURL('image/png');
-            const a = document.createElement('a');
-            a.href = pngUrl;
-            a.download = 'qrcode.png';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            createDownloadLink(canvas.toDataURL('image/png'), 'qrcode.png');
         };
         img.onerror = () => { console.error('PNG generation error'); };
         img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgString);
@@ -624,7 +712,8 @@ let currentLogoDataURL = null;
         });
     }
     
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
+        await loadSvgIcons();
         initTheme();
         setupAccordion();
         setupTabs();

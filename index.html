@@ -8,9 +8,9 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
-    <link rel="shortcut icon" href="QR-Cod.png" type="image/x-icon">
+    <link rel="shortcut icon" href="/QR-Cod.png" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -34,7 +34,7 @@
             <button class="tab-btn" data-tab="url-tab"><i class="fas fa-link"></i> URL</button>
             <button class="tab-btn" data-tab="crypto-tab"><i class="fab fa-bitcoin"></i> Crypto</button>
             <button class="tab-btn" data-tab="facebook-tab"><i class="fab fa-facebook"></i> Facebook</button>
-            <button class="tab-btn" data-tab="x-tab"><i class="fab fa-twitter"></i> X</button>
+            <button class="tab-btn" data-tab="x-tab"><i class="fab fa-x-twitter"></i> X</button>
             <button class="tab-btn" data-tab="youtube-tab"><i class="fab fa-youtube"></i> YouTube</button>
             <button class="tab-btn" data-tab="instagram-tab"><i class="fab fa-instagram"></i> Instagram</button>
             <button class="tab-btn" data-tab="linkedin-tab"><i class="fab fa-linkedin"></i> LinkedIn</button>
@@ -42,6 +42,8 @@
             <button class="tab-btn" data-tab="github-tab"><i class="fab fa-github"></i> GitHub</button>
             <button class="tab-btn" data-tab="behance-tab"><i class="fab fa-behance"></i> Behance</button>
             <button class="tab-btn" data-tab="hikmah-tab"><i class="fas fa-graduation-cap"></i> Hikmah</button>
+            <button class="tab-btn" data-tab="pinterest-tab"><i class="fab fa-pinterest"></i> Pinterest</button>
+            <button class="tab-btn" data-tab="codepen-tab"><i class="fab fa-codepen"></i> CodePen</button>
             <button class="tab-btn" data-tab="text-tab"><i class="fas fa-paragraph"></i> Text</button>
             <button class="tab-btn" data-tab="email-tab"><i class="fas fa-envelope"></i> Email</button>
             <button class="tab-btn" data-tab="phone-tab"><i class="fas fa-phone"></i> Phone</button>
@@ -73,7 +75,8 @@
                         </div>
                     </div>
                     <div class="accordion-item">
-                        <div class="accordion-header" data-target="phoneAcc"><i class="fas fa-phone-alt"></i><span>Phone, Telephone
+                        <div class="accordion-header" data-target="phoneAcc"><i
+                                class="fas fa-phone-alt"></i><span>Phone, Telephone
                                 & Fax</span><i class="fas fa-chevron-down toggle-icon"></i></div>
                         <div id="phoneAcc" class="accordion-content">
                             <div class="grid-2">
@@ -88,14 +91,15 @@
                                 <div class="input-row"><label>Mobile</label><input type="tel" id="phoneMobile"
                                         placeholder="+880..." class="auto-update-input" data-mobile-input>
                                 </div>
-                                <div class="input-row"><label>Mobile</label><input type="tel" id="phoneMobile"
+                                <div class="input-row"><label>Mobile Other</label><input type="tel" id="phoneMobile"
                                         placeholder="+880..." class="auto-update-input" data-mobile-input>
                                 </div>
-                                
+
                             </div>
                             <div id="extraMobileContainer"></div>
                             <div style="margin-top: 1rem;" class="button-add-mobile">
-                                <button type="button" id="addMobileNumberBtn" class="btn-outline"><i class="fas fa-plus"></i> Add Mobile Number</button>
+                                <button type="button" id="addMobileNumberBtn" class="btn-outline"><i
+                                        class="fas fa-plus"></i> Add Mobile Number</button>
                             </div>
                         </div>
                     </div>
@@ -108,11 +112,15 @@
                                     class="auto-update-input" data-email-input></div>
                             <div id="extraEmailContainer"></div>
                             <div class="input-row"><label><i class="fas fa-globe"></i> Website</label><input type="url"
-                                    id="vcardWebsite" placeholder="https://..." class="auto-update-input" data-website-input></div>
+                                    id="vcardWebsite" placeholder="https://..." class="auto-update-input"
+                                    data-website-input></div>
                             <div id="extraWebsiteContainer"></div>
-                            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 0.75rem;" class="center-icon-controls">
-                                <button type="button" id="addEmailFieldBtn" class="btn-outline"><i class="fas fa-plus"></i> Add Email</button>
-                                <button type="button" id="addWebsiteFieldBtn" class="btn-outline"><i class="fas fa-plus"></i> Add Website</button>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 0.75rem;"
+                                class="center-icon-controls">
+                                <button type="button" id="addEmailFieldBtn" class="btn-outline"><i
+                                        class="fas fa-plus"></i> Add Email</button>
+                                <button type="button" id="addWebsiteFieldBtn" class="btn-outline"><i
+                                        class="fas fa-plus"></i> Add Website</button>
                             </div>
                             <div class="input-row"><label><i class="fab fa-weixin"></i> WeChat ID</label><input
                                     type="text" id="wechatId" placeholder="wechat_id" class="auto-update-input"></div>
@@ -129,7 +137,7 @@
                             <div class="input-row"><label><i class="fab fa-facebook"></i> Facebook</label><input
                                     type="text" id="facebookInput" placeholder="username" class="auto-update-input">
                             </div>
-                            <div class="input-row"><label><i class="fab fa-twitter"></i> X</label><input type="text"
+                            <div class="input-row"><label><i class="fab fa-x-twitter"></i> X</label><input type="text"
                                     id="xInput" placeholder="@username" class="auto-update-input"></div>
                             <div class="input-row"><label><i class="fab fa-youtube"></i> YouTube</label><input
                                     type="text" id="youtubeInput" placeholder="@handle" class="auto-update-input"></div>
@@ -211,8 +219,8 @@
                             address and click search</div>
                     </div>
                     <div class="google-map-container"><iframe id="googleMapIframe"
-                            src="https://maps.google.com/maps?q=22.865303681449483,-91.09705754184878=12&output=embed" allowfullscreen=""
-                            loading="lazy"></iframe></div>
+                            src="https://maps.google.com/maps?q=22.865303681449483,-91.09705754184878=12&output=embed"
+                            allowfullscreen="" loading="lazy"></iframe></div>
                     <div class="info-badge" style="margin-top: 12px;"><i class="fas fa-map-pin"></i> Scan QR code to
                         open location in maps app</div>
                 </div>
@@ -225,7 +233,7 @@
                 </div>
                 <div id="x-tab" class="tab-panel">
                     <div class="form-section">
-                        <h3><i class="fab fa-twitter"></i> X QR</h3>
+                        <h3><i class="fab fa-x-twitter"></i> X QR</h3>
                     </div>
                     <div class="input-row"><label>X URL</label><input type="url" id="xUrlInput" value="https://x.com/"
                             class="auto-update-input"></div>
@@ -278,6 +286,20 @@
                     </div>
                     <div class="input-row"><label>Hikmah URL</label><input type="url" id="hikmahUrlInput"
                             value="https://hikmah.net/@" class="auto-update-input"></div>
+                </div>
+                <div id="pinterest-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fab fa-pinterest"></i> Pinterest QR</h3>
+                    </div>
+                    <div class="input-row"><label>Pinterest URL</label><input type="url" id="pinUrlInput"
+                            value="https://pinterest.com/" class="auto-update-input"></div>
+                </div>
+                <div id="codepen-tab" class="tab-panel">
+                    <div class="form-section">
+                        <h3><i class="fab fa-codepen"></i> CodePen QR</h3>
+                    </div>
+                    <div class="input-row"><label>CodePen URL</label><input type="url" id="codepenUrlInput"
+                            value="https://codepen.io/" class="auto-update-input"></div>
                 </div>
                 <div id="text-tab" class="tab-panel">
                     <div class="form-section">
@@ -362,44 +384,75 @@
                             </div>
                         </div>
                         <div class="icon-selector-grid" id="centerIconSelectorGrid">
-                            <div class="icon-option" data-icon="fas fa-address-card"><i
+                            <div class="icon-option" data-icon="address-card"><i
                                     class="fas fa-address-card"></i><span>vCard</span></div>
-                            <div class="icon-option" data-icon="fas fa-link"><i class="fas fa-link"></i><span>URL</span>
-                            </div>
-                            <div class="icon-option" data-icon="fab fa-bitcoin"><i
+                            <div class="icon-option" data-icon="link"><i class="fas fa-link"></i><span>Link</span></div>
+                            <div class="icon-option" data-icon="bitcoin"><i
                                     class="fab fa-bitcoin"></i><span>Crypto</span></div>
-                            <div class="icon-option" data-icon="fab fa-facebook"><i
+                            <div class="icon-option" data-icon="facebook"><i
                                     class="fab fa-facebook"></i><span>Facebook</span></div>
-                            <div class="icon-option" data-icon="fab fa-twitter"><i
-                                    class="fab fa-twitter"></i><span>X</span></div>
-                            <div class="icon-option" data-icon="fab fa-youtube"><i
+                            <div class="icon-option" data-icon="twitter"><i
+                                    class="fab fa-twitter"></i><span>Twitter</span></div>
+                            <div class="icon-option" data-icon="youtube"><i
                                     class="fab fa-youtube"></i><span>YouTube</span></div>
-                            <div class="icon-option" data-icon="fab fa-instagram"><i
+                            <div class="icon-option" data-icon="instagram"><i
                                     class="fab fa-instagram"></i><span>Instagram</span></div>
-                            <div class="icon-option" data-icon="fab fa-linkedin"><i
-                                    class="fab fa-linkedin"></i><span>LinkedIn</span></div>
-                            <div class="icon-option" data-icon="fab fa-whatsapp"><i
-                                    class="fab fa-whatsapp"></i><span>WhatsApp</span></div>
-                            <div class="icon-option" data-icon="fab fa-github"><i
-                                    class="fab fa-github"></i><span>GitHub</span></div>
-                            <div class="icon-option" data-icon="fab fa-behance"><i
+                            <div class="icon-option" data-icon="behance"><i
                                     class="fab fa-behance"></i><span>Behance</span></div>
-                            <div class="icon-option" data-icon="fas fa-graduation-cap"><i
+                            <div class="icon-option" data-icon="codepen"><i
+                                    class="fab fa-codepen"></i><span>CodePen</span></div>
+                            <div class="icon-option" data-icon="dribbble"><i
+                                    class="fab fa-dribbble"></i><span>Dribbble</span></div>
+                            <div class="icon-option" data-icon="github"><i
+                                    class="fab fa-github"></i><span>GitHub</span></div>
+                            <div class="icon-option" data-icon="github-1"><i
+                                    class="fab fa-github"></i><span>GitHub Alt</span></div>
+                            <div class="icon-option" data-icon="hikmah"><i
                                     class="fas fa-graduation-cap"></i><span>Hikmah</span></div>
-                            <div class="icon-option" data-icon="fas fa-paragraph"><i
-                                    class="fas fa-paragraph"></i><span>Text</span></div>
-                            <div class="icon-option" data-icon="fas fa-envelope"><i
-                                    class="fas fa-envelope"></i><span>Email</span></div>
-                            <div class="icon-option" data-icon="fas fa-phone"><i
-                                    class="fas fa-phone"></i><span>Phone</span></div>
-                            <div class="icon-option" data-icon="fas fa-comment-dots"><i
-                                    class="fas fa-comment-dots"></i><span>SMS</span></div>
-                            <div class="icon-option" data-icon="fas fa-wifi"><i
-                                    class="fas fa-wifi"></i><span>WiFi</span></div>
-                            <div class="icon-option" data-icon="fas fa-map-marker-alt"><i
+                            <div class="icon-option" data-icon="home"><i
+                                    class="fas fa-home"></i><span>Home</span></div>
+                            <div class="icon-option" data-icon="linkedin"><i
+                                    class="fab fa-linkedin"></i><span>LinkedIn</span></div>
+                            <div class="icon-option" data-icon="location"><i
                                     class="fas fa-map-marker-alt"></i><span>Location</span></div>
-                            <div class="icon-option" data-icon="fas fa-calendar-alt"><i
+                            <div class="icon-option" data-icon="message"><i
+                                    class="fas fa-envelope"></i><span>Message</span></div>
+                            <div class="icon-option" data-icon="mobile"><i
+                                    class="fas fa-mobile-alt"></i><span>Mobile</span></div>
+                            <div class="icon-option" data-icon="person"><i
+                                    class="fas fa-user"></i><span>Person</span></div>
+                            <div class="icon-option" data-icon="pinterest"><i
+                                    class="fab fa-pinterest"></i><span>Pinterest</span></div>
+                            <div class="icon-option" data-icon="sms"><i
+                                    class="fas fa-comment-dots"></i><span>SMS</span></div>
+                            <div class="icon-option" data-icon="snapchat"><i
+                                    class="fab fa-snapchat"></i><span>Snapchat</span></div>
+                            <div class="icon-option" data-icon="telephone"><i
+                                    class="fas fa-phone"></i><span>Telephone</span></div>
+                            <div class="icon-option" data-icon="telephone-1"><i
+                                    class="fas fa-phone-alt"></i><span>Telephone 1</span></div>
+                            <div class="icon-option" data-icon="telephone-3"><i
+                                    class="fas fa-phone-square"></i><span>Telephone 3</span></div>
+                            <div class="icon-option" data-icon="whatsapp"><i
+                                    class="fab fa-whatsapp"></i><span>WhatsApp</span></div>
+                            <div class="icon-option" data-icon="wifi"><i
+                                    class="fas fa-wifi"></i><span>WiFi</span></div>
+                            <div class="icon-option" data-icon="wifi-logo"><i
+                                    class="fas fa-wifi"></i><span>WiFi Logo</span></div>
+                            <div class="icon-option" data-icon="x"><i
+                                    class="fab fa-x-twitter"></i><span>X</span></div>
+                            <div class="icon-option" data-icon="email"><i
+                                    class="fas fa-envelope"></i><span>Email</span></div>
+                            <div class="icon-option" data-icon="event"><i
                                     class="fas fa-calendar-alt"></i><span>Event</span></div>
+                            <div class="icon-option" data-icon="flights"><i
+                                    class="fas fa-plane"></i><span>Flights</span></div>
+                            <div class="icon-option" data-icon="hajj-umrah"><i
+                                    class="fas fa-kaaba"></i><span>Hajj Umrah</span></div>
+                            <div class="icon-option" data-icon="holidays"><i
+                                    class="fas fa-umbrella-beach"></i><span>Holidays</span></div>
+                            <div class="icon-option" data-icon="transfers"><i
+                                    class="fas fa-shuttle-van"></i><span>Transfers</span></div>
                         </div>
                         <div id="centerIconStatus" class="info-badge" style="margin-top: 12px;"><i
                                 class="fas fa-icons"></i> No icon selected</div>
