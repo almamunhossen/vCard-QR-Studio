@@ -2,8 +2,9 @@ let currentLogoDataURL = null;
 let currentCenterIconClass = null;
 let updateTimeout = null;
 let currentCrypto = 'bitcoin';
-let currentQrDotStyle = 'rounded';
-let currentQrMarkerBorderStyle = 'circle';
+let currentQrDotStyle = 'square';
+let currentQrMarkerBorderStyle = 'square';
+let currentQrDotScale = 1;
 
 // SVG icon mapping to local files
 const iconMap = {
@@ -196,18 +197,26 @@ function loadSvgIcons() {
     }
 
     function drawQrDot(x, y, cellSize, color) {
+        const dotScale = Math.max(0.55, Math.min(1, currentQrDotScale));
+        const dotSize = cellSize * dotScale;
+        const inset = (cellSize - dotSize) / 2;
+        const centerX = x + cellSize / 2;
+        const centerY = y + cellSize / 2;
+
         if (currentQrDotStyle === 'dots') {
-            return `<circle cx="${x + cellSize / 2}" cy="${y + cellSize / 2}" r="${cellSize * 0.32}" fill="${color}" />`;
+            return `<circle cx="${centerX}" cy="${centerY}" r="${dotSize / 2}" fill="${color}" />`;
+        }
+
+        if (currentQrDotStyle === 'diamond') {
+            return `<rect x="${x + inset}" y="${y + inset}" width="${dotSize}" height="${dotSize}" transform="rotate(45 ${centerX} ${centerY})" fill="${color}" />`;
         }
 
         if (currentQrDotStyle === 'rounded') {
-            const inset = cellSize * 0.08;
-            const size = cellSize - inset * 2;
-            const radius = size * 0.32;
-            return `<rect x="${x + inset}" y="${y + inset}" width="${size}" height="${size}" rx="${radius}" ry="${radius}" fill="${color}" />`;
+            const radius = dotSize * 0.32;
+            return `<rect x="${x + inset}" y="${y + inset}" width="${dotSize}" height="${dotSize}" rx="${radius}" ry="${radius}" fill="${color}" />`;
         }
 
-        return `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" fill="${color}" />`;
+        return `<rect x="${x + inset}" y="${y + inset}" width="${dotSize}" height="${dotSize}" fill="${color}" />`;
     }
 
     function drawFinderPattern(row, col, cellSize, color, backgroundColor) {
@@ -730,8 +739,16 @@ function loadSvgIcons() {
             });
         };
 
+        const updateDotSizeValue = (value) => {
+            const normalizedValue = Math.max(55, Math.min(100, Number(value) || 84));
+            currentQrDotScale = normalizedValue / 100;
+            const dotSizeValue = document.getElementById('qrDotSizeValue');
+            if (dotSizeValue) dotSizeValue.innerText = `${normalizedValue}%`;
+        };
+
         const dotOptions = Array.from(document.querySelectorAll('[data-dot-style]'));
         const markerOptions = Array.from(document.querySelectorAll('[data-marker-style]'));
+        const dotSizeInput = document.getElementById('qrDotSize');
 
         const initialDot = dotOptions.find(option => option.classList.contains('selected')) || dotOptions[0];
         const initialMarker = markerOptions.find(option => option.classList.contains('selected')) || markerOptions[0];
@@ -744,6 +761,14 @@ function loadSvgIcons() {
         if (initialMarker) {
             currentQrMarkerBorderStyle = initialMarker.getAttribute('data-marker-style') || currentQrMarkerBorderStyle;
             syncSelectedState(markerOptions, initialMarker);
+        }
+
+        if (dotSizeInput) {
+            updateDotSizeValue(dotSizeInput.value);
+            dotSizeInput.addEventListener('input', (event) => {
+                updateDotSizeValue(event.target.value);
+                updateQR();
+            });
         }
 
         dotOptions.forEach(option => {

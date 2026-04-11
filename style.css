@@ -539,17 +539,83 @@
             justify-content: center;
         }
 
-        .qr-style-panel {
+        .preview-accordion {
             margin-top: 1rem;
-            padding: 1rem;
             border-radius: 24px;
             background: var(--qr-style-panel-bg);
             border: 1px solid var(--qr-style-panel-border);
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .preview-accordion-header {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 0.95rem 1rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .preview-accordion-header::-webkit-details-marker {
+            display: none;
+        }
+
+        .preview-accordion-header::marker {
+            display: none;
+            content: '';
+        }
+
+        .preview-accordion-header span {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .preview-accordion-header span i,
+        .preview-toggle-icon {
+            color: var(--icon-color);
+        }
+
+        .preview-toggle-icon {
+            transition: transform 0.2s ease;
+        }
+
+        .preview-accordion[open] .preview-toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .preview-accordion-content {
+            border-top: 1px solid var(--qr-style-panel-border);
+        }
+
+        .qr-style-panel {
+            margin-top: 0;
+            padding: 1rem;
+            border-radius: 0;
+            background: transparent;
+            border: 0;
             text-align: left;
         }
 
         .qr-style-block + .qr-style-block {
             margin-top: 0.9rem;
+        }
+
+        .qr-style-slider {
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        .qr-style-slider span {
+            min-width: 44px;
+            text-align: right;
+            color: var(--icon-color);
+            font-size: 0.78rem;
+            font-weight: 700;
         }
 
         .qr-style-title {
@@ -561,7 +627,7 @@
 
         .qr-style-grid {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(58px, 1fr));
             gap: 10px;
         }
 
