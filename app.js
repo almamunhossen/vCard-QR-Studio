@@ -373,6 +373,23 @@ function loadSvgIcons() {
             .replace(/,/g, '\\,');
     }
 
+    function splitVCardName(fullName) {
+        const parts = (fullName || '').trim().split(/\s+/).filter(Boolean);
+        if (!parts.length) {
+            return { familyName: '', givenName: '' };
+        }
+
+        if (parts.length === 1) {
+            return { familyName: '', givenName: parts[0] };
+        }
+
+        const familyName = parts.pop() || '';
+        return {
+            familyName,
+            givenName: parts.join(' ')
+        };
+    }
+
     function addMobileNumberField() {
         const container = document.getElementById('extraMobileContainer');
         if (!container) return;
@@ -518,11 +535,13 @@ function loadSvgIcons() {
         const safe = (text) => escapeVCardText(text);
         let vc = "BEGIN:VCARD\r\nVERSION:3.0\r\n";
         if (fullName) {
+            const structuredName = splitVCardName(fullName);
             vc += `FN;CHARSET=UTF-8:${safe(fullName)}\r\n`;
-            vc += `N;CHARSET=UTF-8:;${safe(fullName)};;;\r\n`;
+            vc += `N;CHARSET=UTF-8:${safe(structuredName.familyName)};${safe(structuredName.givenName)};;;\r\n`;
+            vc += `SORT-STRING;CHARSET=UTF-8:${safe(structuredName.familyName || structuredName.givenName || fullName)}\r\n`;
         } else {
             vc += `FN;CHARSET=UTF-8:Contact\r\n`;
-            vc += `N;CHARSET=UTF-8:;;;;\r\n`;
+            vc += `N;CHARSET=UTF-8:;Contact;;;\r\n`;
         }
         if (org) vc += `ORG;CHARSET=UTF-8:${safe(org)}\r\n`;
         if (jobTitle) vc += `TITLE;CHARSET=UTF-8:${safe(jobTitle)}\r\n`;
