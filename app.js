@@ -300,28 +300,18 @@ function loadSvgIcons() {
         const count = container.querySelectorAll('.mobile-extra-row').length + 2;
         const row = document.createElement('div');
         row.className = 'input-row mobile-extra-row';
-        row.style.display = 'flex';
-        row.style.gap = '10px';
-        row.style.alignItems = 'center';
         row.innerHTML = `
-            <label style="flex: 0 0 140px;">Mobile Other ${count}</label>
-            <input type="tel" data-mobile-input placeholder="+880..." class="auto-update-input" style="flex:1;" />
+            <input type="text" data-mobile-label placeholder="Label (e.g. WhatsApp)" class="auto-update-input" value="Mobile Other ${count}">
+            <input type="tel" data-mobile-input placeholder="+880..." class="auto-update-input" />
             <button type="button" class="btn-outline remove-mobile-btn" style="padding:0.55rem 0.9rem; white-space:nowrap;"><i class="fas fa-times"></i></button>
         `;
         const removeBtn = row.querySelector('.remove-mobile-btn');
         removeBtn.addEventListener('click', () => {
             row.remove();
-            updateMobileLabels();
             updateQR();
         });
         container.appendChild(row);
-    }
-
-    function updateMobileLabels() {
-        document.querySelectorAll('#extraMobileContainer .mobile-extra-row').forEach((row, index) => {
-            const label = row.querySelector('label');
-            if (label) label.textContent = `Mobile Other ${index + 2}`;
-        });
+        updateQR();
     }
 
     function addDigitalField(type) {
@@ -364,6 +354,30 @@ function loadSvgIcons() {
             updateQR();
         });
         container.appendChild(row);
+    }
+
+    function addSocialLinkField() {
+        const container = document.getElementById('extraSocialContainer');
+        if (!container) return;
+
+        const count = container.querySelectorAll('.social-extra-row').length + 1;
+        const row = document.createElement('div');
+        row.className = 'input-row social-extra-row';
+
+        row.innerHTML = `
+            <input type="text" data-social-label placeholder="Label (e.g. Telegram)" class="auto-update-input" value="Social ${count}">
+            <input type="url" data-social-link-input placeholder="https://..." class="auto-update-input">
+            <button type="button" class="btn-outline remove-social-btn" style="padding:0.55rem 0.9rem; white-space:nowrap;"><i class="fas fa-times"></i></button>
+        `;
+
+        const removeBtn = row.querySelector('.remove-social-btn');
+        removeBtn.addEventListener('click', () => {
+            row.remove();
+            updateQR();
+        });
+
+        container.appendChild(row);
+        updateQR();
     }
 
     function updateDigitalLabels(type) {
@@ -416,6 +430,9 @@ function loadSvgIcons() {
             if (type === 'youtube') return val.startsWith('@') ? `https://youtube.com/${val}` : `https://youtube.com/@${val}`;
             if (type === 'instagram') return `https://instagram.com/${val.replace(/^@/, '')}`;
             if (type === 'linkedin') return `https://linkedin.com/in/${val}`;
+            if (type === 'tiktok') return val.startsWith('http') ? val : `https://tiktok.com/@${val.replace(/^@/, '')}`;
+            if (type === 'snapchat') return val.startsWith('http') ? val : `https://snapchat.com/add/${val}`;
+            if (type === 'behance') return val.startsWith('http') ? val : `https://behance.net/${val}`;
             return val;
         };
 
@@ -433,10 +450,20 @@ function loadSvgIcons() {
         if (phoneWork) vc += `TEL;TYPE=WORK,VOICE:${phoneWork.replace(/\s/g, '')}\r\n`;
         if (phonePrivate) vc += `TEL;TYPE=HOME,VOICE:${phonePrivate.replace(/\s/g, '')}\r\n`;
 
-        const mobileInputs = Array.from(document.querySelectorAll('[data-mobile-input]'));
-        mobileInputs.forEach(input => {
+        const staticMobileInputs = Array.from(document.querySelectorAll('#phoneAcc .grid-2 [data-mobile-input]'));
+        staticMobileInputs.forEach(input => {
             const value = input.value.trim();
             if (value) vc += `TEL;TYPE=CELL,VOICE:${value.replace(/\s/g, '')}\r\n`;
+        });
+
+        const extraMobileRows = Array.from(document.querySelectorAll('#extraMobileContainer .mobile-extra-row'));
+        extraMobileRows.forEach((row, index) => {
+            const number = row.querySelector('[data-mobile-input]')?.value.trim() || '';
+            const label = row.querySelector('[data-mobile-label]')?.value.trim() || `MobileOther${index + 2}`;
+            if (!number) return;
+
+            const safeType = label.replace(/[^a-zA-Z0-9_-]/g, '');
+            vc += `TEL;TYPE=${safeType || `MobileOther${index + 2}`}:${number.replace(/\s/g, '')}\r\n`;
         });
 
         emailInputs.forEach(input => {
@@ -456,6 +483,19 @@ function loadSvgIcons() {
         let yt = getSocial('youtubeInput', 'youtube'); if (yt) vc += `URL;TYPE=YouTube:${yt}\r\n`;
         let ig = getSocial('instagramInput', 'instagram'); if (ig) vc += `URL;TYPE=Instagram:${ig}\r\n`;
         let li = getSocial('linkedinInput', 'linkedin'); if (li) vc += `URL;TYPE=LinkedIn:${li}\r\n`;
+        let tk = getSocial('tikTokInput', 'tiktok'); if (tk) vc += `URL;TYPE=TikTok:${tk}\r\n`;
+        let sc = getSocial('snapchatInput', 'snapchat'); if (sc) vc += `URL;TYPE=Snapchat:${sc}\r\n`;
+        let bh = getSocial('behanceInput', 'behance'); if (bh) vc += `URL;TYPE=Behance:${bh}\r\n`;
+
+        const extraSocialRows = Array.from(document.querySelectorAll('.social-extra-row'));
+        extraSocialRows.forEach((row, index) => {
+            const label = row.querySelector('[data-social-label]')?.value.trim() || `Social${index + 1}`;
+            const value = row.querySelector('[data-social-link-input]')?.value.trim() || '';
+            if (!value) return;
+
+            const safeType = label.replace(/[^a-zA-Z0-9_-]/g, '');
+            vc += `URL;TYPE=${safeType || `Social${index + 1}`}:${value}\r\n`;
+        });
         if (address) vc += `ADR;TYPE=WORK;CHARSET=UTF-8:;;${safe(address).replace(/,/g, ';')};;;;\r\n`;
         if (maps) vc += `URL;TYPE=Map:${maps}\r\n`;
         vc += "END:VCARD\r\n";
@@ -732,6 +772,7 @@ function loadSvgIcons() {
         document.getElementById('addMobileNumberBtn')?.addEventListener('click', () => addMobileNumberField());
         document.getElementById('addEmailFieldBtn')?.addEventListener('click', () => addDigitalField('email'));
         document.getElementById('addWebsiteFieldBtn')?.addEventListener('click', () => addDigitalField('website'));
+        document.getElementById('addSocialLinkBtn')?.addEventListener('click', addSocialLinkField);
         document.getElementById('resetCenterIconBtn')?.addEventListener('click', () => resetCenterIconSettings());
         updateQR();
     });
