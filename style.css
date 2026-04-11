@@ -43,6 +43,15 @@
             --crypto-bg: rgba(255,140,66,0.08);
             --qr-dark-module: #000000;
             --qr-bg-color: #ffffff;
+            --qr-style-panel-bg: var(--accordion-bg);
+            --qr-style-panel-border: var(--tab-active-bg);
+            --qr-style-option-bg: var(--input-bg);
+            --qr-style-option-border: var(--border-color);
+            --qr-style-option-color: #2d313a;
+            --qr-style-option-selected-bg: linear-gradient(145deg, #2b2f38, #16191f);
+            --qr-style-option-selected-border: #16191f;
+            --qr-style-option-selected-color: #ffffff;
+            --qr-style-option-selected-shadow: 0 10px 18px rgba(0, 0, 0, 0.16);
         }
 
         body.dark {
@@ -67,6 +76,15 @@
             --crypto-bg: rgba(255,140,66,0.15);
             --qr-dark-module: #000000;
             --qr-bg-color: #ffffff;
+            --qr-style-panel-bg: rgba(255,159,94,0.12);
+            --qr-style-panel-border: rgba(255,159,94,0.38);
+            --qr-style-option-bg: #243049;
+            --qr-style-option-border: #46516f;
+            --qr-style-option-color: #e8edff;
+            --qr-style-option-selected-bg: linear-gradient(145deg, #ffb97f, #ff9650);
+            --qr-style-option-selected-border: #ffb97f;
+            --qr-style-option-selected-color: #1e2438;
+            --qr-style-option-selected-shadow: 0 10px 20px rgba(255, 159, 94, 0.24);
         }
 
         body {
@@ -525,8 +543,8 @@
             margin-top: 1rem;
             padding: 1rem;
             border-radius: 24px;
-            background: var(--accordion-bg);
-            border: 1px solid var(--tab-active-bg);
+            background: var(--qr-style-panel-bg);
+            border: 1px solid var(--qr-style-panel-border);
             text-align: left;
         }
 
@@ -548,14 +566,14 @@
         }
 
         .qr-style-option {
-            border: 2px solid var(--border-color);
-            background: var(--input-bg);
+            border: 2px solid var(--qr-style-option-border);
+            background: var(--qr-style-option-bg);
             border-radius: 16px;
             min-height: 54px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #2d313a;
+            color: var(--qr-style-option-color);
             cursor: pointer;
             transition: transform 0.2s, border-color 0.2s, background 0.2s, color 0.2s, box-shadow 0.2s;
         }
@@ -566,10 +584,10 @@
         }
 
         .qr-style-option.selected {
-            background: linear-gradient(145deg, #2b2f38, #16191f);
-            border-color: #16191f;
-            color: #ffffff;
-            box-shadow: 0 10px 18px rgba(0, 0, 0, 0.16);
+            background: var(--qr-style-option-selected-bg);
+            border-color: var(--qr-style-option-selected-border);
+            color: var(--qr-style-option-selected-color);
+            box-shadow: var(--qr-style-option-selected-shadow);
         }
 
         .qr-style-preview {
