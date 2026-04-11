@@ -2,6 +2,8 @@ let currentLogoDataURL = null;
 let currentCenterIconClass = null;
 let updateTimeout = null;
 let currentCrypto = 'bitcoin';
+let currentQrDotStyle = 'rounded';
+let currentQrMarkerBorderStyle = 'circle';
 
 // SVG icon mapping to local files
 const iconMap = {
@@ -179,6 +181,69 @@ function loadSvgIcons() {
         return unescape(encodeURIComponent(normalized));
     }
 
+    function getFinderPatternOrigins(moduleCount) {
+        return [
+            { row: 0, col: 0 },
+            { row: 0, col: moduleCount - 7 },
+            { row: moduleCount - 7, col: 0 }
+        ];
+    }
+
+    function isFinderPatternCell(row, col, moduleCount) {
+        return getFinderPatternOrigins(moduleCount).some(origin => {
+            return row >= origin.row && row < origin.row + 7 && col >= origin.col && col < origin.col + 7;
+        });
+    }
+
+    function drawQrDot(x, y, cellSize, color) {
+        if (currentQrDotStyle === 'dots') {
+            return `<circle cx="${x + cellSize / 2}" cy="${y + cellSize / 2}" r="${cellSize * 0.32}" fill="${color}" />`;
+        }
+
+        if (currentQrDotStyle === 'rounded') {
+            const inset = cellSize * 0.08;
+            const size = cellSize - inset * 2;
+            const radius = size * 0.32;
+            return `<rect x="${x + inset}" y="${y + inset}" width="${size}" height="${size}" rx="${radius}" ry="${radius}" fill="${color}" />`;
+        }
+
+        return `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" fill="${color}" />`;
+    }
+
+    function drawFinderPattern(row, col, cellSize, color, backgroundColor) {
+        const x = col * cellSize;
+        const y = row * cellSize;
+        const outerSize = cellSize * 7;
+        const middleInset = cellSize;
+        const middleSize = cellSize * 5;
+        const innerInset = cellSize * 2;
+        const innerSize = cellSize * 3;
+
+        if (currentQrMarkerBorderStyle === 'circle') {
+            const cx = x + outerSize / 2;
+            const cy = y + outerSize / 2;
+            return `
+                <circle cx="${cx}" cy="${cy}" r="${outerSize / 2}" fill="${color}" />
+                <circle cx="${cx}" cy="${cy}" r="${middleSize / 2}" fill="${backgroundColor}" />
+                <circle cx="${cx}" cy="${cy}" r="${innerSize / 2}" fill="${color}" />
+            `;
+        }
+
+        const radiusMap = {
+            square: 0,
+            rounded: cellSize * 1.55
+        };
+        const outerRadius = radiusMap[currentQrMarkerBorderStyle] ?? 0;
+        const middleRadius = currentQrMarkerBorderStyle === 'rounded' ? cellSize * 1.05 : 0;
+        const innerRadius = currentQrMarkerBorderStyle === 'rounded' ? cellSize * 0.7 : 0;
+
+        return `
+            <rect x="${x}" y="${y}" width="${outerSize}" height="${outerSize}" rx="${outerRadius}" ry="${outerRadius}" fill="${color}" />
+            <rect x="${x + middleInset}" y="${y + middleInset}" width="${middleSize}" height="${middleSize}" rx="${middleRadius}" ry="${middleRadius}" fill="${backgroundColor}" />
+            <rect x="${x + innerInset}" y="${y + innerInset}" width="${innerSize}" height="${innerSize}" rx="${innerRadius}" ry="${innerRadius}" fill="${color}" />
+        `;
+    }
+
     function renderQRWithLogoAndIcon(text) {
         if (!text || text === "") text = " ";
         const size = 220;
@@ -188,19 +253,24 @@ function loadSvgIcons() {
         const moduleCount = qr.getModuleCount();
         const cellSize = size / moduleCount;
         const qrDarkColor = getComputedStyle(document.body).getPropertyValue('--qr-dark-module').trim() || '#000000';
+        const qrBackgroundColor = getComputedStyle(document.body).getPropertyValue('--qr-bg-color').trim() || '#FFFFFF';
         
-        let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" shape-rendering="crispEdges">`;
-        svg += `<rect width="${size}" height="${size}" fill="#FFFFFF"/>`;
+        let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" shape-rendering="geometricPrecision">`;
+        svg += `<rect width="${size}" height="${size}" fill="${qrBackgroundColor}"/>`;
         
         for (let row = 0; row < moduleCount; row++) {
             for (let col = 0; col < moduleCount; col++) {
-                if (qr.isDark(row, col)) {
+                if (qr.isDark(row, col) && !isFinderPatternCell(row, col, moduleCount)) {
                     let x = col * cellSize;
                     let y = row * cellSize;
-                    svg += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" fill="${qrDarkColor}" />`;
+                    svg += drawQrDot(x, y, cellSize, qrDarkColor);
                 }
             }
         }
+
+        getFinderPatternOrigins(moduleCount).forEach(origin => {
+            svg += drawFinderPattern(origin.row, origin.col, cellSize, qrDarkColor, qrBackgroundColor);
+        });
         
         const centerX = size / 2;
         const centerY = size / 2;
@@ -218,7 +288,7 @@ function loadSvgIcons() {
             const bgY = centerY - bgHeight / 2;
             
             if (eraseBg) {
-                svg += `<rect x="${bgX}" y="${bgY}" width="${bgWidth}" height="${bgHeight}" fill="#FFFFFF" rx="${bgRadius}" />`;
+                svg += `<rect x="${bgX}" y="${bgY}" width="${bgWidth}" height="${bgHeight}" fill="${qrBackgroundColor}" rx="${bgRadius}" />`;
             }
             
             // Embed SVG icon directly
@@ -269,7 +339,7 @@ function loadSvgIcons() {
             const logoX = (size - logoSizeVal) / 2;
             const logoY = (size - logoSizeVal) / 2;
             if (eraseBgLogo) {
-                svg += `<rect x="${logoX-2}" y="${logoY-2}" width="${logoSizeVal+4}" height="${logoSizeVal+4}" fill="#FFFFFF" rx="8" />`;
+                svg += `<rect x="${logoX-2}" y="${logoY-2}" width="${logoSizeVal+4}" height="${logoSizeVal+4}" fill="${qrBackgroundColor}" rx="8" />`;
             }
             svg += `<image href="${currentLogoDataURL}" x="${logoX}" y="${logoY}" width="${logoSizeVal}" height="${logoSizeVal}" preserveAspectRatio="xMidYMid meet" />`;
         }
@@ -650,6 +720,48 @@ function loadSvgIcons() {
             document.getElementById('iconBgRadiusValue').innerText = e.target.value + 'px';
         });
     }
+
+    function setupQrStyleSelector() {
+        const syncSelectedState = (options, selectedOption) => {
+            options.forEach(option => {
+                const isSelected = option === selectedOption;
+                option.classList.toggle('selected', isSelected);
+                option.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+            });
+        };
+
+        const dotOptions = Array.from(document.querySelectorAll('[data-dot-style]'));
+        const markerOptions = Array.from(document.querySelectorAll('[data-marker-style]'));
+
+        const initialDot = dotOptions.find(option => option.classList.contains('selected')) || dotOptions[0];
+        const initialMarker = markerOptions.find(option => option.classList.contains('selected')) || markerOptions[0];
+
+        if (initialDot) {
+            currentQrDotStyle = initialDot.getAttribute('data-dot-style') || currentQrDotStyle;
+            syncSelectedState(dotOptions, initialDot);
+        }
+
+        if (initialMarker) {
+            currentQrMarkerBorderStyle = initialMarker.getAttribute('data-marker-style') || currentQrMarkerBorderStyle;
+            syncSelectedState(markerOptions, initialMarker);
+        }
+
+        dotOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                currentQrDotStyle = option.getAttribute('data-dot-style') || currentQrDotStyle;
+                syncSelectedState(dotOptions, option);
+                updateQR();
+            });
+        });
+
+        markerOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                currentQrMarkerBorderStyle = option.getAttribute('data-marker-style') || currentQrMarkerBorderStyle;
+                syncSelectedState(markerOptions, option);
+                updateQR();
+            });
+        });
+    }
     
     // Logo upload with progress bar
     const dropzone = document.getElementById('logoDropzone');
@@ -760,6 +872,7 @@ function loadSvgIcons() {
         setupCryptoSelector();
         setupAutoUpdate();
         setupCenterIconSelector();
+        setupQrStyleSelector();
         document.getElementById('searchAddressBtn')?.addEventListener('click', () => {
             const address = document.getElementById('addressSearch').value;
             if (address.trim()) searchAddress(address);
