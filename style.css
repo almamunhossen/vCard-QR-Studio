@@ -782,6 +782,56 @@
             border-radius: 20px;
             transition: width 0.3s ease;
         }
+
+        .logo-preview-panel {
+            margin-top: 14px;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            background: var(--preview-bg);
+        }
+
+        .logo-thumb-frame {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: fit-content;
+            margin: 0 auto 0.9rem;
+            background: transparent;
+            border-radius: 8px;
+            transition: background 0.2s ease, padding 0.2s ease, border-radius 0.2s ease;
+        }
+
+        .logo-thumb {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            display: block;
+            border-radius: 0;
+            transition: border-radius 0.2s ease, width 0.2s ease, height 0.2s ease;
+        }
+
+        .logo-control-grid {
+            display: grid;
+            gap: 10px;
+        }
+
+        .logo-control-grid .size-slider {
+            margin-top: 0;
+        }
+
+        .logo-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .logo-toggle input {
+            accent-color: var(--icon-color);
+        }
         
         .size-slider {
             display: flex;
@@ -799,6 +849,14 @@
         .size-slider input {
             flex: 1;
             accent-color: var(--icon-color);
+        }
+
+        .size-slider span {
+            min-width: 44px;
+            text-align: right;
+            color: var(--icon-color);
+            font-size: 0.78rem;
+            font-weight: 700;
         }
         
         .auto-update-badge {
@@ -888,6 +946,8 @@
             .grid-3 { grid-template-columns: 1fr; }
             .grid-2{grid-template-columns: 1fr;}
             .qr-style-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .size-slider { align-items: stretch; flex-wrap: wrap; }
+            .size-slider label { width: 100%; }
             .mobile-extra-row { grid-template-columns: 1fr; }
             .mobile-extra-row .remove-mobile-btn { width: 100%; }
             .social-extra-row { grid-template-columns: 1fr; }

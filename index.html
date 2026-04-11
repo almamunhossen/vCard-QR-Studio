@@ -509,15 +509,33 @@
                         <div class="progress-bar-container" id="logoProgressContainer" style="display: none;">
                             <div class="progress-bar" id="logoProgressBar"></div>
                         </div>
-                        <div id="logoPreviewModern" style="display: none;">
-                            <img id="logoThumb" style="width: 60px; height: 60px; object-fit: contain;">
-                            <div class="size-slider">
-                                <label><i class="fas fa-expand-alt"></i> Logo Size</label>
-                                <input type="range" id="logoSize" min="30" max="90" value="55">
-                                <span id="logoSizeValue">55px</span>
-                            </div>
-                            <label style="display: flex; align-items: center; gap: 8px; margin-top: 8px;"><input
-                                    type="checkbox" id="eraseBehindLogo"> Erase background behind logo</label>
+                                                <div id="logoPreviewModern" class="logo-preview-panel" style="display: none;">
+                                                        <div class="logo-thumb-frame" id="logoThumbFrame">
+                                                                <img id="logoThumb" class="logo-thumb" alt="Uploaded logo preview">
+                                                        </div>
+                                                        <div class="logo-control-grid">
+                                                                <div class="size-slider">
+                                                                        <label><i class="fas fa-expand-alt"></i> Logo Size</label>
+                                                                        <input type="range" id="logoSize" min="30" max="90" value="55">
+                                                                        <span id="logoSizeValue">55px</span>
+                                                                </div>
+                                                                <div class="size-slider">
+                                                                        <label><i class="fas fa-image"></i> Logo Border Radius</label>
+                                                                        <input type="range" id="logoRadius" min="0" max="30" value="0" step="1">
+                                                                        <span id="logoRadiusValue">0px</span>
+                                                                </div>
+                                                                <div class="size-slider">
+                                                                        <label><i class="fas fa-border-all"></i> Background Border</label>
+                                                                        <input type="range" id="logoBorderSize" min="0" max="20" value="4" step="1">
+                                                                        <span id="logoBorderSizeValue">4px</span>
+                                                                </div>
+                                                                <div class="size-slider">
+                                                                        <label><i class="fas fa-draw-square"></i> Background Border Radius</label>
+                                                                        <input type="range" id="logoBgRadius" min="0" max="30" value="8" step="1">
+                                                                        <span id="logoBgRadiusValue">8px</span>
+                                                                </div>
+                                                                <label class="logo-toggle"><input type="checkbox" id="eraseBehindLogo" checked> Erase background behind logo</label>
+                                                        </div>
                         </div>
                         <div id="logoStatus" class="info-badge"><i class="fas fa-image"></i> No logo</div>
                     </div>

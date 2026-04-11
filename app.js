@@ -253,6 +253,43 @@ function loadSvgIcons() {
         `;
     }
 
+    function syncLogoPreviewControls() {
+        const sizeInput = document.getElementById('logoSize');
+        const logoRadiusInput = document.getElementById('logoRadius');
+        const borderInput = document.getElementById('logoBorderSize');
+        const radiusInput = document.getElementById('logoBgRadius');
+        const eraseInput = document.getElementById('eraseBehindLogo');
+        const sizeValue = document.getElementById('logoSizeValue');
+        const logoRadiusValue = document.getElementById('logoRadiusValue');
+        const borderValue = document.getElementById('logoBorderSizeValue');
+        const radiusValue = document.getElementById('logoBgRadiusValue');
+        const thumb = document.getElementById('logoThumb');
+        const thumbFrame = document.getElementById('logoThumbFrame');
+
+        const logoSize = parseInt(sizeInput?.value || 55, 10);
+        const logoRadius = parseInt(logoRadiusInput?.value || 0, 10);
+        const logoBorderSize = parseInt(borderInput?.value || 4, 10);
+        const logoBgRadius = parseInt(radiusInput?.value || 8, 10);
+        const showBackground = Boolean(eraseInput?.checked);
+
+        if (sizeValue) sizeValue.innerText = `${logoSize}px`;
+        if (logoRadiusValue) logoRadiusValue.innerText = `${logoRadius}px`;
+        if (borderValue) borderValue.innerText = `${logoBorderSize}px`;
+        if (radiusValue) radiusValue.innerText = `${logoBgRadius}px`;
+
+        if (thumb) {
+            thumb.style.width = `${logoSize}px`;
+            thumb.style.height = `${logoSize}px`;
+            thumb.style.borderRadius = `${logoRadius}px`;
+        }
+
+        if (thumbFrame) {
+            thumbFrame.style.padding = showBackground ? `${logoBorderSize}px` : '0px';
+            thumbFrame.style.borderRadius = `${logoBgRadius}px`;
+            thumbFrame.style.background = showBackground ? 'var(--qr-bg-color)' : 'transparent';
+        }
+    }
+
     function renderQRWithLogoAndIcon(text) {
         if (!text || text === "") text = " ";
         const size = 220;
@@ -344,13 +381,25 @@ function loadSvgIcons() {
         // Draw logo on top if present
         if (currentLogoDataURL) {
             const logoSizeVal = parseInt(document.getElementById('logoSize')?.value || 55);
+            const logoRadiusVal = parseInt(document.getElementById('logoRadius')?.value || 0, 10);
+            const logoBorderSizeVal = parseInt(document.getElementById('logoBorderSize')?.value || 4, 10);
+            const logoBgRadiusVal = parseInt(document.getElementById('logoBgRadius')?.value || 8, 10);
             const eraseBgLogo = document.getElementById('eraseBehindLogo')?.checked;
             const logoX = (size - logoSizeVal) / 2;
             const logoY = (size - logoSizeVal) / 2;
             if (eraseBgLogo) {
-                svg += `<rect x="${logoX-2}" y="${logoY-2}" width="${logoSizeVal+4}" height="${logoSizeVal+4}" fill="${qrBackgroundColor}" rx="8" />`;
+                svg += `<rect x="${logoX - logoBorderSizeVal}" y="${logoY - logoBorderSizeVal}" width="${logoSizeVal + (logoBorderSizeVal * 2)}" height="${logoSizeVal + (logoBorderSizeVal * 2)}" fill="${qrBackgroundColor}" rx="${logoBgRadiusVal}" />`;
             }
-            svg += `<image href="${currentLogoDataURL}" x="${logoX}" y="${logoY}" width="${logoSizeVal}" height="${logoSizeVal}" preserveAspectRatio="xMidYMid meet" />`;
+            if (logoRadiusVal > 0) {
+                svg += `
+                    <defs>
+                        <clipPath id="logoImageClip">
+                            <rect x="${logoX}" y="${logoY}" width="${logoSizeVal}" height="${logoSizeVal}" rx="${logoRadiusVal}" ry="${logoRadiusVal}" />
+                        </clipPath>
+                    </defs>
+                `;
+            }
+            svg += `<image href="${currentLogoDataURL}" x="${logoX}" y="${logoY}" width="${logoSizeVal}" height="${logoSizeVal}" preserveAspectRatio="xMidYMid meet"${logoRadiusVal > 0 ? ' clip-path="url(#logoImageClip)"' : ''} />`;
         }
         
         svg += `</svg>`;
@@ -669,8 +718,16 @@ function loadSvgIcons() {
                 if (event.target.matches('.auto-update-input')) debouncedUpdate();
             });
         }
-        document.getElementById('logoSize')?.addEventListener('input', () => updateQR());
-        document.getElementById('eraseBehindLogo')?.addEventListener('change', () => updateQR());
+        const syncLogoPreviewAndQR = () => {
+            syncLogoPreviewControls();
+            updateQR();
+        };
+        document.getElementById('logoSize')?.addEventListener('input', syncLogoPreviewAndQR);
+        document.getElementById('logoRadius')?.addEventListener('input', syncLogoPreviewAndQR);
+        document.getElementById('logoBorderSize')?.addEventListener('input', syncLogoPreviewAndQR);
+        document.getElementById('logoBgRadius')?.addEventListener('input', syncLogoPreviewAndQR);
+        document.getElementById('eraseBehindLogo')?.addEventListener('change', syncLogoPreviewAndQR);
+        syncLogoPreviewControls();
         document.getElementById('centerIconSize')?.addEventListener('input', () => updateQR());
         document.getElementById('eraseBehindIcon')?.addEventListener('change', () => updateQR());
         document.getElementById('iconBgRadius')?.addEventListener('input', (e) => {
@@ -842,9 +899,12 @@ function loadSvgIcons() {
             const thumb = document.getElementById('logoThumb');
             const preview = document.getElementById('logoPreviewModern');
             const status = document.getElementById('logoStatus');
+            const eraseLogoBackground = document.getElementById('eraseBehindLogo');
             if (thumb) thumb.src = currentLogoDataURL;
             if (preview) preview.style.display = 'block';
             if (status) status.innerHTML = '<i class="fas fa-check-circle"></i> Logo loaded';
+            if (eraseLogoBackground) eraseLogoBackground.checked = true;
+            syncLogoPreviewControls();
             updateQR();
         };
         reader.readAsDataURL(file);
