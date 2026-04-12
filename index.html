@@ -450,16 +450,8 @@
                                     class="fas fa-calendar-alt"></i><span>Event</span></div>
                             <div class="icon-option" data-icon="flights"><i
                                     class="fas fa-plane"></i><span>Flights</span></div>
-                            <div class="icon-option" data-icon="hajj-umrah"><i class="fas fa-kaaba"></i><                        .                        function updateDigitalLabel                        const extraSocialRows = Array.from(document.querySelectorAll('.social-extra-row'));
-                        extraSocialRows.forEach((row, index) => {
-                            const label = row.querySelector('[data-social-label]')?.value.trim() || `Social${index + 1}`;
-                            const value = row.querySelector('[data-social-link-input]')?.value.trim() || '';
-                            if (!value) return;
-                        
-                            const safeType = label.replace(/[^a-zA-Z0-9_-]/g, '');
-                            vc += `URL;TYPE=${safeType || `Social${index + 1}`}:${value}\r\n`;
-                        });jj
-                                    Umrah</span></div>
+                            <div class="icon-option" data-icon="hajj-umrah"><i
+                                    class="fas fa-kaaba"></i><span>Hajj Umrah</span></div>
                             <div class="icon-option" data-icon="holidays"><i
                                     class="fas fa-umbrella-beach"></i><span>Holidays</span></div>
                             <div class="icon-option" data-icon="transfers"><i
