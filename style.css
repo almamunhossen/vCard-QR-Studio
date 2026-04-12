@@ -941,6 +941,77 @@
             margin-top: 1rem;
             text-align: center;
         }
+
+        .site-footer {
+            margin-top: 1.5rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .footer-brand {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .footer-mark {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .footer-mark i {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            background: var(--btn-primary-gradient);
+            color: #ffffff;
+            font-size: 0.9rem;
+        }
+
+        .footer-brand p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+
+        .footer-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.35rem;
+            text-align: right;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-meta a {
+            color: var(--icon-color);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .footer-meta a:hover {
+            text-decoration: underline;
+        }
+
         .button-add-mobile {
         justify-content: center;
         align-items: center;
@@ -1072,6 +1143,15 @@
             .mobile-extra-row .remove-mobile-btn { width: 100%; }
             .social-extra-row { grid-template-columns: 1fr; }
             .social-extra-row .remove-social-btn { width: 100%; }
+            .footer-content {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem;
+            }
+            .footer-meta {
+                align-items: flex-start;
+                text-align: left;
+            }
         }
 
         @media (max-width: 560px) {
@@ -1112,5 +1192,16 @@
             }
             .info-badge {
                 font-size: 0.66rem;
+            }
+            .footer-content {
+                padding: 0.9rem;
+                border-radius: 24px;
+            }
+            .footer-mark {
+                font-size: 0.9rem;
+            }
+            .footer-brand p,
+            .footer-meta {
+                font-size: 0.76rem;
             }
         }

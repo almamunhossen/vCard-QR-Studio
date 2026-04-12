@@ -993,3 +993,8 @@ function loadSvgIcons() {
         document.getElementById('resetCenterIconBtn')?.addEventListener('click', () => resetCenterIconSettings());
         updateQR();
     });
+
+    const yearElement = document.getElementById('year-update');
+    if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+    }
