@@ -92,9 +92,11 @@
             font-family: 'Inter', sans-serif;
             padding: 1.5rem;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .app-container {
+            width: min(100%, 1132px);
             max-width: 1132px;
             margin: 0 auto;
         }
@@ -210,6 +212,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 2rem;
+            align-items: flex-start;
         }
         label {
              color:var(--icon-color);
@@ -537,6 +540,10 @@
             margin-top: 1rem;
             flex-wrap: wrap;
             justify-content: center;
+        }
+
+        .generate-btn-wrapper {
+            margin-top: 0.75rem;
         }
 
         .preview-accordion {
@@ -939,17 +946,171 @@
         align-items: center;
         display: flex;
         }
+        @media (max-width: 1080px) {
+            .two-columns {
+                flex-direction: column;
+                gap: 1.25rem;
+            }
+
+            .form-card,
+            .qr-card {
+                min-width: 0;
+                width: 100%;
+            }
+
+            .qr-card {
+                position: relative;
+                top: 0;
+            }
+        }
+
         @media (max-width: 800px) {
             body { padding: 1rem; }
-            .qr-card { position: relative; top: 0; }
-            .qr-tabs { border-radius: 28px; }
+            .header {
+                align-items: flex-start;
+                gap: 0.9rem;
+                margin-bottom: 1rem;
+            }
+            .sub {
+                margin-left: 0;
+                line-height: 1.4;
+            }
+            .theme-toggle {
+                width: 100%;
+                justify-content: center;
+            }
+            .qr-tabs {
+                border-radius: 28px;
+                padding: 0.75rem;
+                max-height: none;
+                overflow-x: auto;
+                overflow-y: hidden;
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                scroll-snap-type: x proximity;
+            }
+            .tab-btn {
+                flex: 0 0 auto;
+                scroll-snap-align: start;
+            }
+            .form-card,
+            .qr-card {
+                padding: 1rem;
+                border-radius: 28px;
+            }
+            .qr-visual {
+                padding: 0.85rem;
+                border-radius: 22px;
+            }
+            .accordion-header {
+                padding: 0.85rem 1rem;
+            }
+            .accordion-content {
+                padding: 0 1rem;
+            }
+            .accordion-content.open {
+                padding: 0.95rem 1rem 1rem 1rem;
+            }
             .grid-3 { grid-template-columns: 1fr; }
-            .grid-2{grid-template-columns: 1fr;}
-            .qr-style-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-            .size-slider { align-items: stretch; flex-wrap: wrap; }
-            .size-slider label { width: 100%; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .location-search-container .input-row {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .search-button {
+                width: 100%;
+                justify-content: center;
+                margin-top: 0;
+            }
+            .btn-group-qr {
+                flex-direction: column;
+            }
+            .btn-group-qr > *,
+            .generate-btn-wrapper .btn-primary {
+                width: 100%;
+                justify-content: center;
+            }
+            .qr-style-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+            .preview-accordion-header {
+                padding: 0.9rem;
+            }
+            .size-slider {
+                align-items: stretch;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .size-slider label {
+                width: 100%;
+            }
+            .size-slider span {
+                width: 100%;
+                text-align: right;
+            }
+            .center-icon-controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .center-icon-controls > div:last-child {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .icon-selector-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                max-height: 250px;
+            }
+            .logo-preview-panel {
+                padding: 0.9rem;
+            }
+            .logo-toggle {
+                align-items: flex-start;
+            }
             .mobile-extra-row { grid-template-columns: 1fr; }
             .mobile-extra-row .remove-mobile-btn { width: 100%; }
             .social-extra-row { grid-template-columns: 1fr; }
             .social-extra-row .remove-social-btn { width: 100%; }
+        }
+
+        @media (max-width: 560px) {
+            body {
+                padding: 0.7rem;
+            }
+            .header-left h1 {
+                font-size: 1.55rem;
+                gap: 10px;
+            }
+            .header-left h1 i {
+                padding: 7px 10px;
+                font-size: 1rem;
+            }
+            .sub {
+                font-size: 0.78rem;
+            }
+            .qr-tabs {
+                border-radius: 24px;
+            }
+            .tab-btn {
+                font-size: 0.75rem;
+                padding: 0.45rem 0.8rem;
+            }
+            .accordion-header span {
+                font-size: 0.84rem;
+            }
+            .input-row input,
+            .input-row select,
+            .input-row textarea {
+                padding: 0.65rem 0.85rem;
+            }
+            .icon-selector-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .qr-style-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .info-badge {
+                font-size: 0.66rem;
+            }
         }
