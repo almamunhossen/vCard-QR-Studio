@@ -2,542 +2,849 @@
 <html lang="en" dir="ltr">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>QR Studio | Complete vCard + Crypto + Social Media + Location Maps</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
-    <link rel="shortcut icon" href="/QR-Cod.png" type="image/x-icon">
-    <link rel="stylesheet" href="style.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+        <title>QR Studio | Complete vCard + Crypto + Social Media + Location Maps</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+                rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+        <script src="https://unpkg.com/qr-scanner@1.4.2/qr-scanner.umd.min.js"></script>
+        <script src="libs/qr-scanner.umd.min.js"></script>
+        <link rel="shortcut icon" href="/QR-Cod.png" type="image/x-icon">
+        <link rel="stylesheet" href="style.css">
+        <style>
+                .app-container {
+                        width: min(100%, 1132px);
+                        max-width: 1132px;
+                        margin: 0px auto;
+                }
+        </style>
 </head>
 
 <body>
 
-    <div class="app-container">
-        <div class="header">
-            <div class="header-left">
-                <h1><i class="fas fa-qrcode"></i> QR Studio</h1>
-                <div class="sub"><i class="fas fa-address-card"></i> Complete vCard | Crypto Payments | Social Media |
-                    Location Maps</div>
-            </div>
-            <div class="theme-toggle" id="themeToggle">
-                <i class="fas fa-moon"></i> <span>Dark/Light</span>
-            </div>
-        </div>
+        <div class="app-container">
+                <!-- Home Page Toggle -->
+                <div class="header" style="margin-bottom: 0.5rem;">
+                        <div class="header-left">
+                                <h1><i class="fas fa-qrcode"></i> QR Studio</h1>
+                                <div class="sub"><i class="fas fa-address-card"></i> Complete vCard | Crypto Payments |
+                                        Social Media |
+                                        Location Maps</div>
+                        </div>
+                        <div class="theme-toggle" id="themeToggle">
+                                <i class="fas fa-moon"></i> <span>Dark/Light</span>
+                        </div>
+                </div>
+                <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 1.5rem;">
 
-        <!-- TABS with Icons -->
-        <div class="qr-tabs">
-            <button class="tab-btn active" data-tab="vcard-tab"><i class="fas fa-address-card"></i> vCard</button>
-            <button class="tab-btn" data-tab="url-tab"><i class="fas fa-link"></i> URL</button>
-            <button class="tab-btn" data-tab="crypto-tab"><i class="fab fa-bitcoin"></i> Crypto</button>
-            <button class="tab-btn" data-tab="facebook-tab"><i class="fab fa-facebook"></i> Facebook</button>
-            <button class="tab-btn" data-tab="x-tab"><i class="fab fa-x-twitter"></i> X</button>
-            <button class="tab-btn" data-tab="youtube-tab"><i class="fab fa-youtube"></i> YouTube</button>
-            <button class="tab-btn" data-tab="instagram-tab"><i class="fab fa-instagram"></i> Instagram</button>
-            <button class="tab-btn" data-tab="linkedin-tab"><i class="fab fa-linkedin"></i> LinkedIn</button>
-            <button class="tab-btn" data-tab="whatsapp-tab"><i class="fab fa-whatsapp"></i> WhatsApp</button>
-            <button class="tab-btn" data-tab="github-tab"><i class="fab fa-github"></i> GitHub</button>
-            <button class="tab-btn" data-tab="behance-tab"><i class="fab fa-behance"></i> Behance</button>
-            <button class="tab-btn" data-tab="hikmah-tab"><i class="fas fa-graduation-cap"></i> Hikmah</button>
-            <button class="tab-btn" data-tab="pinterest-tab"><i class="fab fa-pinterest"></i> Pinterest</button>
-            <button class="tab-btn" data-tab="codepen-tab"><i class="fab fa-codepen"></i> CodePen</button>
-            <button class="tab-btn" data-tab="text-tab"><i class="fas fa-paragraph"></i> Text</button>
-            <button class="tab-btn" data-tab="email-tab"><i class="fas fa-envelope"></i> Email</button>
-            <button class="tab-btn" data-tab="phone-tab"><i class="fas fa-phone"></i> Phone</button>
-            <button class="tab-btn" data-tab="sms-tab"><i class="fas fa-comment-dots"></i> SMS</button>
-            <button class="tab-btn" data-tab="wifi-tab"><i class="fas fa-wifi"></i> WiFi</button>
-            <button class="tab-btn" data-tab="location-tab"><i class="fas fa-map-marker-alt"></i> Location</button>
-            <button class="tab-btn" data-tab="event-tab"><i class="fas fa-calendar-alt"></i> Event</button>
-        </div>
+                        <button id="generatorToggle" class="btn-outline active"><i class="fas fa-qrcode"></i> QR Code
+                                Generator</button>
+                        <button id="scannerToggle" class="btn-outline"><i class="fas fa-radar"></i> QR Code
+                                Scanner</button>
+                        <script>
+                        // Always keep generatorToggle active
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const generatorToggle = document.getElementById('generatorToggle');
+                            const scannerToggle = document.getElementById('scannerToggle');
+                            generatorToggle.classList.add('active');
+                            scannerToggle.classList.remove('active');
+                            document.getElementById('generatorPanel').style.display = 'flex';
+                            document.getElementById('scannerPanel').style.display = 'none';
+                        });
+                        // Enable dark mode by default
+                        document.addEventListener('DOMContentLoaded', function() {
+                            document.body.classList.add('dark');
+                        });
+                        </script>
+                </div>
 
-        <div class="two-columns">
-            <div class="form-card">
-                <!-- VCARD PANEL -->
-                <div id="vcard-tab" class="tab-panel active-panel">
-                    <div class="accordion-item">
-                        <div class="accordion-header" data-target="personalAcc"><i
-                                class="fas fa-user"></i><span>Personal & Work</span><i
-                                class="fas fa-chevron-down toggle-icon"></i></div>
-                        <div id="personalAcc" class="accordion-content open">
-                            <div class="input-row"><label><i class="fas fa-user"></i> Full Name / Contact Name</label><input
-                                    type="text" id="fullName" placeholder="Full Name" class="auto-update-input"></div>
-                            <div class="grid-2">
-                                <div class="input-row"><label><i class="fas fa-building"></i> Organization</label><input
-                                        type="text" id="organization" placeholder="Company" class="auto-update-input">
+
+                <!-- SCANNER PANEL -->
+                <div id="scannerPanel" style="display: block;">
+                        <div style="display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start;">
+                                <!-- Left: Dropzone -->
+                                <div
+                                        style="flex: 1.2; min-width: 340px; background: var(--card-bg); border-radius: 18px; padding: 1.2rem 1.2rem 0.5rem 1.2rem; box-shadow: var(--card-shadow);">
+                                        <div style="display: flex; gap: 8px; margin-bottom: 0.7rem;">
+                                                <button id="tabUpload" class="btn-outline active" style="flex:1 1 0;"><i
+                                                                class="fas fa-upload"></i> Upload</button>
+                                                <button id="tabCamera" class="btn-outline" style="flex:1 1 0;"><i
+                                                                class="fas fa-camera"></i> Scan via Camera</button>
+                                        </div>
+                                        <div id="qrDropZone" class="dropzone modern-dropzone" tabindex="0">
+                                                <textarea id="qrPasteCatcher" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;left:-9999px;top:0;"></textarea>
+                                                <div class="dropzone-content">
+                                                        <i class="fas fa-image"></i>
+                                                        <div class="dropzone-instructions">
+                                                                <strong>Upload, Drag & Drop, or Paste (Ctrl+V) an Image</strong>
+                                                                <div class="dropzone-hint">Supported: PNG, JPG, GIF with QR code</div>
+                                                        </div>
+                                                        <input type="file" id="qrImageInput" accept="image/*" style="display: none;">
+                                                        <button id="qrUploadBtn" class="btn-outline modern-btn"><i class="fas fa-upload"></i> Upload Image</button>
+                                                        <span id="qrDropZoneNote" class="dropzone-note">Nothing found in QR code</span>
+                                                </div>
+                                        </div>
+                                        <div style="margin-top: 1rem; text-align:left;">
+                                                <span
+                                                        style="color: var(--icon-color); font-size: 0.8rem; font-weight:600;">Note:</span>
+                                                <span style="color: var(--text-secondary); font-size: 0.8rem;"> We do
+                                                        not sell or share your data with any third parties. For more
+                                                        details, check out our privacy policy.</span>
+                                        </div>
                                 </div>
-                                <div class="input-row"><label><i class="fas fa-briefcase"></i> Job Title</label><input
-                                        type="text" id="jobTitle" placeholder="e.g. Senior Manager"
-                                        class="auto-update-input"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <div class="accordion-header" data-target="phoneAcc"><i
-                                class="fas fa-phone-alt"></i><span>Phone, Telephone
-                                & Fax</span><i class="fas fa-chevron-down toggle-icon"></i></div>
-                        <div id="phoneAcc" class="accordion-content">
-                            <div class="grid-2">
-                                <div class="input-row"><label>Phone (Work)</label><input type="tel" id="phoneWork"
-                                        placeholder="+880..." class="auto-update-input"></div>
-                                <div class="input-row"><label>Extension</label><input type="text" id="phoneWorkExt"
-                                        placeholder="Ext. 123" class="auto-update-input"></div>
-                                <div class="input-row"><label>Phone (Private)</label><input type="tel" id="phonePrivate"
-                                        placeholder="+880..." class="auto-update-input"></div>
-                                <div class="input-row"><label>Fax</label><input type="tel" id="faxPrivate"
-                                        placeholder="Fax number" class="auto-update-input"></div>
-                                <div class="input-row"><label>Mobile</label><input type="tel" id="phoneMobile"
-                                        placeholder="+880..." class="auto-update-input" data-mobile-input>
+                                <!-- Right: Results -->
+                                <div
+                                        style="flex: 2; min-width: 360px; background: var(--card-bg); border-radius: 18px; padding: 1.2rem 1.2rem 0.5rem 1.2rem; box-shadow: var(--card-shadow);">
+                                        <div
+                                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.7rem;">
+                                                <h3 style="color: var(--icon-color); margin:0;"><i
+                                                                class="fas fa-list"></i> Scanned Items(<span
+                                                                id="scanCount">0</span>)</h3>
+                                                <div>
+                                                        <button id="downloadAllBtn" class="btn-outline"
+                                                                style="margin-right: 6px;"><i
+                                                                        class="fas fa-download"></i> Download
+                                                                All</button>
+                                                        <button id="clearAllBtn" class="btn-primary"
+                                                                style="background: #ff3b3b; border:none;"><i
+                                                                        class="fas fa-trash"></i> Clear All</button>
+                                                </div>
+                                        </div>
+                                        <div class="results-table-container">
+                                                <table class="modern-results-table">
+                                                        <thead>
+                                                                <tr>
+                                                                        <th>No.</th>
+                                                                        <th>Results</th>
+                                                                        <th>Type</th>
+                                                                        <th></th>
+                                                                </tr>
+                                                        </thead>
+                                                        <tbody id="scanResultsTable">
+                                                                <!-- Results will be injected here -->
+                                                        </tbody>
+                                                </table>
+                                        </div>
                                 </div>
-                                <div class="input-row"><label>Mobile Other</label><input type="tel" id="phoneMobileOther"
-                                        placeholder="+880..." class="auto-update-input" data-mobile-input>
+                        </div>
+                        <style>
+                                .dropzone {
+                                        border: 2px dashed var(--input-border);
+                                        border-radius: 18px;
+                                        background: var(--dropzone-bg);
+                                        padding: 1rem;
+                                        text-align: center;
+                                        cursor: pointer;
+                                        transition: border-color 0.2s;
+                                        outline: none;
+                                }
+
+                                .dropzone:focus {
+                                        border-color: var(--icon-color);
+                                        box-shadow: 0 0 0 2px var(--icon-color);
+                                }
+
+                                .btn-outline.active {
+                                        background: var(--tab-active-bg);
+                                        color: white;
+                                        box-shadow: 0 4px 12px rgba(255, 140, 66, 0.3);
+                                }
+                        </style>
+                </div>
+
+                <!-- GENERATOR PANEL (existing content) -->
+                <div id="generatorPanel" class="two-columns" style="display: none;">
+                        <!-- TABS with Icons -->
+                        <div class="qr-tabs">
+                                <button class="tab-btn active" data-tab="vcard-tab"><i class="fas fa-address-card"></i>
+                                        vCard</button>
+                                <button class="tab-btn" data-tab="url-tab"><i class="fas fa-link"></i> URL</button>
+                                <button class="tab-btn" data-tab="crypto-tab"><i class="fab fa-bitcoin"></i>
+                                        Crypto</button>
+                                <button class="tab-btn" data-tab="facebook-tab"><i class="fab fa-facebook"></i>
+                                        Facebook</button>
+                                <button class="tab-btn" data-tab="x-tab"><i class="fab fa-x-twitter"></i> X</button>
+                                <button class="tab-btn" data-tab="youtube-tab"><i class="fab fa-youtube"></i>
+                                        YouTube</button>
+                                <button class="tab-btn" data-tab="instagram-tab"><i class="fab fa-instagram"></i>
+                                        Instagram</button>
+                                <button class="tab-btn" data-tab="linkedin-tab"><i class="fab fa-linkedin"></i>
+                                        LinkedIn</button>
+                                <button class="tab-btn" data-tab="whatsapp-tab"><i class="fab fa-whatsapp"></i>
+                                        WhatsApp</button>
+                                <button class="tab-btn" data-tab="github-tab"><i class="fab fa-github"></i>
+                                        GitHub</button>
+                                <button class="tab-btn" data-tab="behance-tab"><i class="fab fa-behance"></i>
+                                        Behance</button>
+                                <button class="tab-btn" data-tab="hikmah-tab"><i class="fas fa-graduation-cap"></i>
+                                        Hikmah</button>
+                                <button class="tab-btn" data-tab="pinterest-tab"><i class="fab fa-pinterest"></i>
+                                        Pinterest</button>
+                                <button class="tab-btn" data-tab="codepen-tab"><i class="fab fa-codepen"></i>
+                                        CodePen</button>
+                                <button class="tab-btn" data-tab="text-tab"><i class="fas fa-paragraph"></i>
+                                        Text</button>
+                                <button class="tab-btn" data-tab="email-tab"><i class="fas fa-envelope"></i>
+                                        Email</button>
+                                <button class="tab-btn" data-tab="phone-tab"><i class="fas fa-phone"></i> Phone</button>
+                                <button class="tab-btn" data-tab="sms-tab"><i class="fas fa-comment-dots"></i>
+                                        SMS</button>
+                                <button class="tab-btn" data-tab="wifi-tab"><i class="fas fa-wifi"></i> WiFi</button>
+                                <button class="tab-btn" data-tab="location-tab"><i class="fas fa-map-marker-alt"></i>
+                                        Location</button>
+                                <button class="tab-btn" data-tab="event-tab"><i class="fas fa-calendar-alt"></i>
+                                        Event</button>
+                        </div>
+                        <div class="form-card">
+                                <!-- VCARD PANEL -->
+                                <div id="vcard-tab" class="tab-panel active-panel">
+                                        <div class="accordion-item">
+                                                <div class="accordion-header" data-target="personalAcc"><i
+                                                                class="fas fa-user"></i><span>Personal & Work</span><i
+                                                                class="fas fa-chevron-down toggle-icon"></i></div>
+                                                <div id="personalAcc" class="accordion-content open">
+                                                        <div class="input-row"><label><i class="fas fa-user"></i> Full
+                                                                        Name / Contact Name</label><input type="text"
+                                                                        id="fullName" placeholder="Full Name"
+                                                                        class="auto-update-input"></div>
+                                                        <div class="grid-2">
+                                                                <div class="input-row"><label><i
+                                                                                        class="fas fa-building"></i>
+                                                                                Organization</label><input type="text"
+                                                                                id="organization" placeholder="Company"
+                                                                                class="auto-update-input">
+                                                                </div>
+                                                                <div class="input-row"><label><i
+                                                                                        class="fas fa-briefcase"></i>
+                                                                                Job Title</label><input type="text"
+                                                                                id="jobTitle"
+                                                                                placeholder="e.g. Senior Manager"
+                                                                                class="auto-update-input"></div>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                                <div class="accordion-header" data-target="phoneAcc"><i
+                                                                class="fas fa-phone-alt"></i><span>Phone, Telephone
+                                                                & Fax</span><i
+                                                                class="fas fa-chevron-down toggle-icon"></i></div>
+                                                <div id="phoneAcc" class="accordion-content">
+                                                        <div class="grid-2">
+                                                                <div class="input-row"><label>Phone (Work)</label><input
+                                                                                type="tel" id="phoneWork"
+                                                                                placeholder="+880..."
+                                                                                class="auto-update-input"></div>
+                                                                <div class="input-row"><label>Extension</label><input
+                                                                                type="text" id="phoneWorkExt"
+                                                                                placeholder="Ext. 123"
+                                                                                class="auto-update-input"></div>
+                                                                <div class="input-row"><label>Phone
+                                                                                (Private)</label><input type="tel"
+                                                                                id="phonePrivate" placeholder="+880..."
+                                                                                class="auto-update-input"></div>
+                                                                <div class="input-row"><label>Fax</label><input
+                                                                                type="tel" id="faxPrivate"
+                                                                                placeholder="Fax number"
+                                                                                class="auto-update-input"></div>
+                                                                <div class="input-row"><label>Mobile</label><input
+                                                                                type="tel" id="phoneMobile"
+                                                                                placeholder="+880..."
+                                                                                class="auto-update-input"
+                                                                                data-mobile-input>
+                                                                </div>
+                                                                <div class="input-row"><label>Mobile Other</label><input
+                                                                                type="tel" id="phoneMobileOther"
+                                                                                placeholder="+880..."
+                                                                                class="auto-update-input"
+                                                                                data-mobile-input>
+                                                                </div>
+
+                                                        </div>
+                                                        <div id="extraMobileContainer"></div>
+                                                        <div style="margin-top: 1rem;" class="button-add-mobile">
+                                                                <button type="button" id="addMobileNumberBtn"
+                                                                        class="btn-outline"><i class="fas fa-plus"></i>
+                                                                        Add Mobile Number</button>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                                <div class="accordion-header" data-target="digitalAcc"><i
+                                                                class="fas fa-globe"></i><span>Digital
+                                                                Profiles</span><i
+                                                                class="fas fa-chevron-down toggle-icon"></i></div>
+                                                <div id="digitalAcc" class="accordion-content">
+                                                        <div class="input-row"><label><i class="fas fa-envelope"></i>
+                                                                        Email</label><input type="email" id="vcardEmail"
+                                                                        placeholder="email@example.com"
+                                                                        class="auto-update-input" data-email-input>
+                                                        </div>
+                                                        <div id="extraEmailContainer"></div>
+                                                        <div class="input-row"><label><i class="fas fa-globe"></i>
+                                                                        Website</label><input type="url"
+                                                                        id="vcardWebsite" placeholder="https://..."
+                                                                        class="auto-update-input" data-website-input>
+                                                        </div>
+                                                        <div id="extraWebsiteContainer"></div>
+                                                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 0.75rem;"
+                                                                class="center-icon-controls">
+                                                                <button type="button" id="addEmailFieldBtn"
+                                                                        class="btn-outline"><i class="fas fa-plus"></i>
+                                                                        Add Email</button>
+                                                                <button type="button" id="addWebsiteFieldBtn"
+                                                                        class="btn-outline"><i class="fas fa-plus"></i>
+                                                                        Add Website</button>
+                                                        </div>
+                                                        <div class="input-row"><label><i class="fab fa-weixin"></i>
+                                                                        WeChat ID</label><input type="text"
+                                                                        id="wechatId" placeholder="wechat_id"
+                                                                        class="auto-update-input"></div>
+                                                </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                                <div class="accordion-header" data-target="socialVcardAcc"><i
+                                                                class="fas fa-share-alt"></i><span>Social Links</span><i
+                                                                class="fas fa-chevron-down toggle-icon"></i></div>
+                                                <div id="socialVcardAcc" class="accordion-content">
+                                                        <div class="input-row"><label><i class="fab fa-whatsapp"></i>
+                                                                        WhatsApp</label><input type="text"
+                                                                        id="whatsappInput" placeholder="+880..."
+                                                                        class="auto-update-input"></div>
+                                                        <div class="input-row"><label><i class="fab fa-facebook"></i>
+                                                                        Facebook</label><input type="text"
+                                                                        id="facebookInput" placeholder="username"
+                                                                        class="auto-update-input"></div>
+                                                        <div class="input-row"><label><i class="fab fa-x-twitter"></i>
+                                                                        X</label><input type="text" id="xInput"
+                                                                        placeholder="@username"
+                                                                        class="auto-update-input"></div>
+                                                        <div class="input-row"><label><i class="fab fa-youtube"></i>
+                                                                        YouTube</label><input type="text"
+                                                                        id="youtubeInput" placeholder="@handle"
+                                                                        class="auto-update-input"></div>
+                                                        <div class="input-row"><label><i class="fab fa-instagram"></i>
+                                                                        Instagram</label><input type="text"
+                                                                        id="instagramInput" placeholder="username"
+                                                                        class="auto-update-input"></div>
+                                                        <div class="input-row"><label><i class="fab fa-linkedin"></i>
+                                                                        LinkedIn</label><input type="text"
+                                                                        id="linkedinInput" placeholder="username"
+                                                                        class="auto-update-input"></div>
+                                                        <div class="input-row"><label><i class="fab fa-tiktok"></i>
+                                                                        TikTok</label><input type="url" id="tikTokInput"
+                                                                        placeholder="@username"
+                                                                        class="auto-update-input" data-social-input>
+                                                        </div>
+                                                        <div class="input-row"><label><i class="fab fa-snapchat"></i>
+                                                                        Snapchat</label><input type="url"
+                                                                        id="snapchatInput" placeholder="@username"
+                                                                        class="auto-update-input" data-social-input>
+                                                        </div>
+                                                        <div class="input-row"><label><i class="fab fa-behance"></i>
+                                                                        Behance</label><input type="url"
+                                                                        id="behanceInput" placeholder="@username"
+                                                                        class="auto-update-input" data-social-input>
+                                                        </div>
+                                                        <div id="extraSocialContainer"></div>
+                                                        <div style="margin-top: 1rem;" class="button-add-mobile">
+                                                                <button type="button" id="addSocialLinkBtn"
+                                                                        class="btn-outline"><i class="fas fa-plus"></i>
+                                                                        Add Social Link</button>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                                <div class="accordion-header" data-target="locationVcardAcc"><i
+                                                                class="fas fa-map-marker-alt"></i><span>Location</span><i
+                                                                class="fas fa-chevron-down toggle-icon"></i></div>
+                                                <div id="locationVcardAcc" class="accordion-content">
+                                                        <div class="input-row"><label><i
+                                                                                class="fas fa-address-card"></i> Office
+                                                                        Address</label><input type="text"
+                                                                        id="vcardAddress"
+                                                                        placeholder="Street, City, Country"
+                                                                        class="auto-update-input"></div>
+                                                        <div class="input-row"><label><i class="fas fa-map"></i> Google
+                                                                        Maps URL</label><input type="url"
+                                                                        id="vcardMapsUrl"
+                                                                        placeholder="https://maps.google.com/..."
+                                                                        class="auto-update-input"></div>
+                                                </div>
+                                        </div>
                                 </div>
 
-                            </div>
-                            <div id="extraMobileContainer"></div>
-                            <div style="margin-top: 1rem;" class="button-add-mobile">
-                                <button type="button" id="addMobileNumberBtn" class="btn-outline"><i
-                                        class="fas fa-plus"></i> Add Mobile Number</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <div class="accordion-header" data-target="digitalAcc"><i class="fas fa-globe"></i><span>Digital
-                                Profiles</span><i class="fas fa-chevron-down toggle-icon"></i></div>
-                        <div id="digitalAcc" class="accordion-content">
-                            <div class="input-row"><label><i class="fas fa-envelope"></i> Email</label><input
-                                    type="email" id="vcardEmail" placeholder="email@example.com"
-                                    class="auto-update-input" data-email-input></div>
-                            <div id="extraEmailContainer"></div>
-                            <div class="input-row"><label><i class="fas fa-globe"></i> Website</label><input type="url"
-                                    id="vcardWebsite" placeholder="https://..." class="auto-update-input"
-                                    data-website-input></div>
-                            <div id="extraWebsiteContainer"></div>
-                            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 0.75rem;"
-                                class="center-icon-controls">
-                                <button type="button" id="addEmailFieldBtn" class="btn-outline"><i
-                                        class="fas fa-plus"></i> Add Email</button>
-                                <button type="button" id="addWebsiteFieldBtn" class="btn-outline"><i
-                                        class="fas fa-plus"></i> Add Website</button>
-                            </div>
-                            <div class="input-row"><label><i class="fab fa-weixin"></i> WeChat ID</label><input
-                                    type="text" id="wechatId" placeholder="wechat_id" class="auto-update-input"></div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <div class="accordion-header" data-target="socialVcardAcc"><i
-                                class="fas fa-share-alt"></i><span>Social Links</span><i
-                                class="fas fa-chevron-down toggle-icon"></i></div>
-                        <div id="socialVcardAcc" class="accordion-content">
-                                    <div class="input-row"><label><i class="fab fa-whatsapp"></i> WhatsApp</label><input
-                                            type="text" id="whatsappInput" placeholder="+880..." class="auto-update-input"></div>
-                                    <div class="input-row"><label><i class="fab fa-facebook"></i> Facebook</label><input
-                                            type="text" id="facebookInput" placeholder="username" class="auto-update-input"></div>
-                                    <div class="input-row"><label><i class="fab fa-x-twitter"></i> X</label><input type="text"
-                                            id="xInput" placeholder="@username" class="auto-update-input"></div>
-                                    <div class="input-row"><label><i class="fab fa-youtube"></i> YouTube</label><input
-                                            type="text" id="youtubeInput" placeholder="@handle" class="auto-update-input"></div>
-                                    <div class="input-row"><label><i class="fab fa-instagram"></i> Instagram</label><input
-                                            type="text" id="instagramInput" placeholder="username" class="auto-update-input"></div>
-                                    <div class="input-row"><label><i class="fab fa-linkedin"></i> LinkedIn</label><input
-                                            type="text" id="linkedinInput" placeholder="username" class="auto-update-input"></div>
-                                    <div class="input-row"><label><i class="fab fa-tiktok"></i> TikTok</label><input
-                                            type="url" id="tikTokInput" placeholder="@username" class="auto-update-input" data-social-input></div>
-                                    <div class="input-row"><label><i class="fab fa-snapchat"></i> Snapchat</label><input
-                                            type="url" id="snapchatInput" placeholder="@username" class="auto-update-input" data-social-input></div>
-                                    <div class="input-row"><label><i class="fab fa-behance"></i> Behance</label><input
-                                            type="url" id="behanceInput" placeholder="@username" class="auto-update-input" data-social-input></div>
-                                    <div id="extraSocialContainer"></div>
-                                    <div style="margin-top: 1rem;" class="button-add-mobile">
-                                        <button type="button" id="addSocialLinkBtn" class="btn-outline"><i class="fas fa-plus"></i> Add Social Link</button>
-                                    </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <div class="accordion-header" data-target="locationVcardAcc"><i
-                                class="fas fa-map-marker-alt"></i><span>Location</span><i
-                                class="fas fa-chevron-down toggle-icon"></i></div>
-                        <div id="locationVcardAcc" class="accordion-content">
-                            <div class="input-row"><label><i class="fas fa-address-card"></i> Office
-                                    Address</label><input type="text" id="vcardAddress"
-                                    placeholder="Street, City, Country" class="auto-update-input"></div>
-                            <div class="input-row"><label><i class="fas fa-map"></i> Google Maps URL</label><input
-                                    type="url" id="vcardMapsUrl" placeholder="https://maps.google.com/..."
-                                    class="auto-update-input"></div>
-                        </div>
-                    </div>
-                </div>
+                                <div id="url-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fas fa-link"></i> URL QR Code</h3>
+                                        </div>
+                                        <div class="input-row"><label>Your URL</label><input type="url" id="urlInput"
+                                                        value="https://" class="auto-update-input"></div>
+                                </div>
+                                <div id="crypto-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fab fa-bitcoin"></i> Cryptocurrency Payment QR</h3>
+                                        </div>
+                                        <div class="crypto-selector">
+                                                <div class="crypto-options" id="cryptoOptions">
+                                                        <div class="crypto-option" data-crypto="bitcoin"><input
+                                                                        type="radio" name="crypto" value="bitcoin"
+                                                                        checked><i
+                                                                        class="fab fa-bitcoin"></i><span>Bitcoin
+                                                                        (BTC)</span>
+                                                        </div>
+                                                        <div class="crypto-option" data-crypto="bitcoincash"><input
+                                                                        type="radio" name="crypto"
+                                                                        value="bitcoincash"><i
+                                                                        class="fab fa-bitcoin"></i><span>Bitcoin Cash
+                                                                        (BCH)</span>
+                                                        </div>
+                                                        <div class="crypto-option" data-crypto="ethereum"><input
+                                                                        type="radio" name="crypto" value="ethereum"><i
+                                                                        class="fab fa-ethereum"></i><span>Ethereum
+                                                                        (ETH)</span></div>
+                                                        <div class="crypto-option" data-crypto="litecoin"><input
+                                                                        type="radio" name="crypto" value="litecoin"><i
+                                                                        class="fab fa-bitcoin"></i><span>Litecoin
+                                                                        (LTC)</span></div>
+                                                        <div class="crypto-option" data-crypto="dash"><input
+                                                                        type="radio" name="crypto" value="dash"><i
+                                                                        class="fas fa-chart-line"></i><span>Dash
+                                                                        (DASH)</span></div>
+                                                </div>
+                                                <div class="input-row"><label><i class="fas fa-qrcode"></i> Wallet
+                                                                Address</label><input type="text" id="cryptoAddress"
+                                                                placeholder="Enter wallet address"
+                                                                class="auto-update-input"></div>
+                                                <div class="input-row"><label><i class="fas fa-coins"></i> Amount
+                                                                (Optional)</label><input type="text" id="cryptoAmount"
+                                                                placeholder="0.00" class="auto-update-input"></div>
+                                        </div>
+                                </div>
+                                <div id="location-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fas fa-map-marker-alt"></i> Location QR (GEO URI)</h3>
+                                        </div>
+                                        <div class="location-search-container">
+                                                <div class="input-row"><label><i class="fas fa-search-location"></i>
+                                                                Search
+                                                                Address</label><input type="text" id="addressSearch"
+                                                                placeholder="e.g., 5th Bangladesh, Noakhali"
+                                                                class="auto-update-input"><button id="searchAddressBtn"
+                                                                class="search-button"><i class="fas fa-map-pin"></i>
+                                                                Search & Get
+                                                                Coordinates</button></div>
+                                                <div class="grid-2">
+                                                        <div class="input-row"><label><i class="fas fa-arrow-up"></i>
+                                                                        Latitude</label><input type="text" id="latitude"
+                                                                        placeholder="e.g., 22.86530"
+                                                                        class="auto-update-input">
+                                                        </div>
+                                                        <div class="input-row"><label><i class="fas fa-arrow-right"></i>
+                                                                        Longitude</label><input type="text"
+                                                                        id="longitude" placeholder="e.g., 91.0970"
+                                                                        class="auto-update-input">
+                                                        </div>
+                                                </div>
+                                                <div id="locationStatus" class="location-status"><i
+                                                                class="fas fa-info-circle"></i> Enter an
+                                                        address and click search</div>
+                                        </div>
+                                        <div class="google-map-container"><iframe id="googleMapIframe"
+                                                        src="https://maps.google.com/maps?q=22.865303681449483,-91.09705754184878=12&output=embed"
+                                                        allowfullscreen="" loading="lazy"></iframe></div>
+                                        <div class="info-badge" style="margin-top: 12px;"><i class="fas fa-map-pin"></i>
+                                                Scan QR code to
+                                                open location in maps app</div>
+                                </div>
+                                <div id="facebook-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fab fa-facebook"></i> Facebook QR</h3>
+                                        </div>
+                                        <div class="input-row"><label>Facebook URL</label><input type="url"
+                                                        id="facebookUrlInput" value="https://facebook.com/"
+                                                        class="auto-update-input"></div>
+                                </div>
+                                <div id="x-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fab fa-x-twitter"></i> X QR</h3>
+                                        </div>
+                                        <div class="input-row"><label>X URL</label><input type="url" id="xUrlInput"
+                                                        value="https://x.com/" class="auto-update-input"></div>
+                                </div>
+                                <div id="youtube-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fab fa-youtube"></i> YouTube QR</h3>
+                                        </div>
+                                        <div class="input-row"><label>YouTube URL</label><input type="url"
+                                                        id="youtubeUrlInput" value="https://youtube.com/"
+                                                        class="auto-update-input"></div>
+                                </div>
+                                <div id="instagram-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fab fa-instagram"></i> Instagram QR</h3>
+                                        </div>
+                                        <div class="input-row"><label>Instagram URL</label><input type="url"
+                                                        id="instagramUrlInput" value="https://instagram.com/"
+                                                        class="auto-update-input"></div>
+                                </div>
+                                <div id="linkedin-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fab fa-linkedin"></i> LinkedIn QR</h3>
+                                        </div>
+                                        <div class="input-row"><label>LinkedIn URL</label><input type="url"
+                                                        id="linkedinUrlInput" value="https://linkedin.com/in/"
+                                                        class="auto-update-input"></div>
+                                </div>
+                                <div id="whatsapp-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fab fa-whatsapp"></i> WhatsApp QR</h3>
+                                        </div>
+                                        <div class="input-row"><label>WhatsApp Number</label><input type="tel"
+                                                        id="whatsappNumber" value="https://api.whatsapp.com/send?phone="
+                                                        class="auto-update-input"></div>
+                                </div>
+                                <div id="github-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fab fa-github"></i> GitHub QR</h3>
+                                        </div>
+                                        <div class="input-row"><label>GitHub URL</label><input type="url"
+                                                        id="githubUrlInput" value="https://github.com/"
+                                                        class="auto-update-input"></div>
+                                </div>
+                                <div id="behance-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fab fa-behance"></i> Behance QR</h3>
+                                        </div>
+                                        <div class="input-row"><label>Behance URL</label><input type="url"
+                                                        id="behanceUrlInput" value="https://behance.net/"
+                                                        class="auto-update-input"></div>
+                                </div>
+                                <div id="hikmah-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fas fa-graduation-cap"></i> Hikmah QR</h3>
+                                        </div>
+                                        <div class="input-row"><label>Hikmah URL</label><input type="url"
+                                                        id="hikmahUrlInput" value="https://hikmah.net/@"
+                                                        class="auto-update-input"></div>
+                                </div>
+                                <div id="pinterest-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fab fa-pinterest"></i> Pinterest QR</h3>
+                                        </div>
+                                        <div class="input-row"><label>Pinterest URL</label><input type="url"
+                                                        id="pinUrlInput" value="https://pinterest.com/"
+                                                        class="auto-update-input"></div>
+                                </div>
+                                <div id="codepen-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fab fa-codepen"></i> CodePen QR</h3>
+                                        </div>
+                                        <div class="input-row"><label>CodePen URL</label><input type="url"
+                                                        id="codepenUrlInput" value="https://codepen.io/"
+                                                        class="auto-update-input"></div>
+                                </div>
+                                <div id="text-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fas fa-paragraph"></i> Text QR</h3>
+                                        </div>
+                                        <div class="input-row"><label>Your Text</label><textarea id="textInput" rows="5"
+                                                        class="auto-update-input"></textarea></div>
+                                </div>
+                                <div id="email-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fas fa-envelope"></i> Email QR</h3>
+                                        </div>
+                                        <div class="input-row"><label>Email</label><input type="email" id="emailAddress"
+                                                        class="auto-update-input"></div>
+                                        <div class="input-row"><label>Subject</label><input type="text"
+                                                        id="emailSubject" class="auto-update-input"></div>
+                                        <div class="input-row"><label>Message</label><textarea id="emailMessage"
+                                                        rows="4" class="auto-update-input"></textarea></div>
+                                </div>
+                                <div id="phone-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fas fa-phone"></i> Phone QR</h3>
+                                        </div>
+                                        <div class="input-row"><label>Phone Number</label><input type="tel"
+                                                        id="phoneNumber" class="auto-update-input"></div>
+                                </div>
+                                <div id="sms-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fas fa-comment-dots"></i> SMS QR</h3>
+                                        </div>
+                                        <div class="input-row"><label>Phone Number</label><input type="tel"
+                                                        id="smsNumber" class="auto-update-input"></div>
+                                        <div class="input-row"><label>Message</label><textarea id="smsMessage" rows="4"
+                                                        class="auto-update-input"></textarea></div>
+                                </div>
+                                <div id="wifi-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fas fa-wifi"></i> WiFi QR</h3>
+                                        </div>
+                                        <div class="input-row"><label>SSID</label><input type="text" id="wifiSsid"
+                                                        class="auto-update-input"></div>
+                                        <div class="input-row"><label>Password</label><input type="text"
+                                                        id="wifiPassword" class="auto-update-input"></div>
+                                        <div class="input-row"><label>Encryption</label><select id="wifiEncryption"
+                                                        class="auto-update-input">
+                                                        <option value="WPA">WPA/WPA2</option>
+                                                        <option value="WEP">WEP</option>
+                                                        <option value="nopass">None</option>
+                                                </select></div>
+                                </div>
+                                <div id="event-tab" class="tab-panel">
+                                        <div class="form-section">
+                                                <h3><i class="fas fa-calendar-alt"></i> Event QR</h3>
+                                        </div>
+                                        <div class="input-row"><label>Event Title</label><input type="text"
+                                                        id="eventTitle" class="auto-update-input"></div>
+                                        <div class="input-row"><label>Location</label><input type="text"
+                                                        id="eventLocation" class="auto-update-input"></div>
+                                        <div class="grid-2">
+                                                <div class="input-row"><label>Start Date</label><input
+                                                                type="datetime-local" id="eventStart"
+                                                                class="auto-update-input"></div>
+                                                <div class="input-row"><label>End Date</label><input
+                                                                type="datetime-local" id="eventEnd"
+                                                                class="auto-update-input"></div>
+                                        </div>
+                                </div>
 
-                <div id="url-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fas fa-link"></i> URL QR Code</h3>
-                    </div>
-                    <div class="input-row"><label>Your URL</label><input type="url" id="urlInput" value="https://"
-                            class="auto-update-input"></div>
-                </div>
-                <div id="crypto-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fab fa-bitcoin"></i> Cryptocurrency Payment QR</h3>
-                    </div>
-                    <div class="crypto-selector">
-                        <div class="crypto-options" id="cryptoOptions">
-                            <div class="crypto-option" data-crypto="bitcoin"><input type="radio" name="crypto"
-                                    value="bitcoin" checked><i class="fab fa-bitcoin"></i><span>Bitcoin (BTC)</span>
-                            </div>
-                            <div class="crypto-option" data-crypto="bitcoincash"><input type="radio" name="crypto"
-                                    value="bitcoincash"><i class="fab fa-bitcoin"></i><span>Bitcoin Cash (BCH)</span>
-                            </div>
-                            <div class="crypto-option" data-crypto="ethereum"><input type="radio" name="crypto"
-                                    value="ethereum"><i class="fab fa-ethereum"></i><span>Ethereum (ETH)</span></div>
-                            <div class="crypto-option" data-crypto="litecoin"><input type="radio" name="crypto"
-                                    value="litecoin"><i class="fab fa-bitcoin"></i><span>Litecoin (LTC)</span></div>
-                            <div class="crypto-option" data-crypto="dash"><input type="radio" name="crypto"
-                                    value="dash"><i class="fas fa-chart-line"></i><span>Dash (DASH)</span></div>
-                        </div>
-                        <div class="input-row"><label><i class="fas fa-qrcode"></i> Wallet Address</label><input
-                                type="text" id="cryptoAddress" placeholder="Enter wallet address"
-                                class="auto-update-input"></div>
-                        <div class="input-row"><label><i class="fas fa-coins"></i> Amount (Optional)</label><input
-                                type="text" id="cryptoAmount" placeholder="0.00" class="auto-update-input"></div>
-                    </div>
-                </div>
-                <div id="location-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fas fa-map-marker-alt"></i> Location QR (GEO URI)</h3>
-                    </div>
-                    <div class="location-search-container">
-                        <div class="input-row"><label><i class="fas fa-search-location"></i> Search
-                                Address</label><input type="text" id="addressSearch"
-                                placeholder="e.g., 5th Bangladesh, Noakhali" class="auto-update-input"><button
-                                id="searchAddressBtn" class="search-button"><i class="fas fa-map-pin"></i> Search & Get
-                                Coordinates</button></div>
-                        <div class="grid-2">
-                            <div class="input-row"><label><i class="fas fa-arrow-up"></i> Latitude</label><input
-                                    type="text" id="latitude" placeholder="e.g., 22.86530" class="auto-update-input">
-                            </div>
-                            <div class="input-row"><label><i class="fas fa-arrow-right"></i> Longitude</label><input
-                                    type="text" id="longitude" placeholder="e.g., 91.0970" class="auto-update-input">
-                            </div>
-                        </div>
-                        <div id="locationStatus" class="location-status"><i class="fas fa-info-circle"></i> Enter an
-                            address and click search</div>
-                    </div>
-                    <div class="google-map-container"><iframe id="googleMapIframe"
-                            src="https://maps.google.com/maps?q=22.865303681449483,-91.09705754184878=12&output=embed"
-                            allowfullscreen="" loading="lazy"></iframe></div>
-                    <div class="info-badge" style="margin-top: 12px;"><i class="fas fa-map-pin"></i> Scan QR code to
-                        open location in maps app</div>
-                </div>
-                <div id="facebook-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fab fa-facebook"></i> Facebook QR</h3>
-                    </div>
-                    <div class="input-row"><label>Facebook URL</label><input type="url" id="facebookUrlInput"
-                            value="https://facebook.com/" class="auto-update-input"></div>
-                </div>
-                <div id="x-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fab fa-x-twitter"></i> X QR</h3>
-                    </div>
-                    <div class="input-row"><label>X URL</label><input type="url" id="xUrlInput" value="https://x.com/"
-                            class="auto-update-input"></div>
-                </div>
-                <div id="youtube-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fab fa-youtube"></i> YouTube QR</h3>
-                    </div>
-                    <div class="input-row"><label>YouTube URL</label><input type="url" id="youtubeUrlInput"
-                            value="https://youtube.com/" class="auto-update-input"></div>
-                </div>
-                <div id="instagram-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fab fa-instagram"></i> Instagram QR</h3>
-                    </div>
-                    <div class="input-row"><label>Instagram URL</label><input type="url" id="instagramUrlInput"
-                            value="https://instagram.com/" class="auto-update-input"></div>
-                </div>
-                <div id="linkedin-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fab fa-linkedin"></i> LinkedIn QR</h3>
-                    </div>
-                    <div class="input-row"><label>LinkedIn URL</label><input type="url" id="linkedinUrlInput"
-                            value="https://linkedin.com/in/" class="auto-update-input"></div>
-                </div>
-                <div id="whatsapp-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fab fa-whatsapp"></i> WhatsApp QR</h3>
-                    </div>
-                    <div class="input-row"><label>WhatsApp Number</label><input type="tel" id="whatsappNumber"
-                            value="https://api.whatsapp.com/send?phone=" class="auto-update-input"></div>
-                </div>
-                <div id="github-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fab fa-github"></i> GitHub QR</h3>
-                    </div>
-                    <div class="input-row"><label>GitHub URL</label><input type="url" id="githubUrlInput"
-                            value="https://github.com/" class="auto-update-input"></div>
-                </div>
-                <div id="behance-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fab fa-behance"></i> Behance QR</h3>
-                    </div>
-                    <div class="input-row"><label>Behance URL</label><input type="url" id="behanceUrlInput"
-                            value="https://behance.net/" class="auto-update-input"></div>
-                </div>
-                <div id="hikmah-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fas fa-graduation-cap"></i> Hikmah QR</h3>
-                    </div>
-                    <div class="input-row"><label>Hikmah URL</label><input type="url" id="hikmahUrlInput"
-                            value="https://hikmah.net/@" class="auto-update-input"></div>
-                </div>
-                <div id="pinterest-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fab fa-pinterest"></i> Pinterest QR</h3>
-                    </div>
-                    <div class="input-row"><label>Pinterest URL</label><input type="url" id="pinUrlInput"
-                            value="https://pinterest.com/" class="auto-update-input"></div>
-                </div>
-                <div id="codepen-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fab fa-codepen"></i> CodePen QR</h3>
-                    </div>
-                    <div class="input-row"><label>CodePen URL</label><input type="url" id="codepenUrlInput"
-                            value="https://codepen.io/" class="auto-update-input"></div>
-                </div>
-                <div id="text-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fas fa-paragraph"></i> Text QR</h3>
-                    </div>
-                    <div class="input-row"><label>Your Text</label><textarea id="textInput" rows="5"
-                            class="auto-update-input"></textarea></div>
-                </div>
-                <div id="email-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fas fa-envelope"></i> Email QR</h3>
-                    </div>
-                    <div class="input-row"><label>Email</label><input type="email" id="emailAddress"
-                            class="auto-update-input"></div>
-                    <div class="input-row"><label>Subject</label><input type="text" id="emailSubject"
-                            class="auto-update-input"></div>
-                    <div class="input-row"><label>Message</label><textarea id="emailMessage" rows="4"
-                            class="auto-update-input"></textarea></div>
-                </div>
-                <div id="phone-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fas fa-phone"></i> Phone QR</h3>
-                    </div>
-                    <div class="input-row"><label>Phone Number</label><input type="tel" id="phoneNumber"
-                            class="auto-update-input"></div>
-                </div>
-                <div id="sms-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fas fa-comment-dots"></i> SMS QR</h3>
-                    </div>
-                    <div class="input-row"><label>Phone Number</label><input type="tel" id="smsNumber"
-                            class="auto-update-input"></div>
-                    <div class="input-row"><label>Message</label><textarea id="smsMessage" rows="4"
-                            class="auto-update-input"></textarea></div>
-                </div>
-                <div id="wifi-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fas fa-wifi"></i> WiFi QR</h3>
-                    </div>
-                    <div class="input-row"><label>SSID</label><input type="text" id="wifiSsid"
-                            class="auto-update-input"></div>
-                    <div class="input-row"><label>Password</label><input type="text" id="wifiPassword"
-                            class="auto-update-input"></div>
-                    <div class="input-row"><label>Encryption</label><select id="wifiEncryption"
-                            class="auto-update-input">
-                            <option value="WPA">WPA/WPA2</option>
-                            <option value="WEP">WEP</option>
-                            <option value="nopass">None</option>
-                        </select></div>
-                </div>
-                <div id="event-tab" class="tab-panel">
-                    <div class="form-section">
-                        <h3><i class="fas fa-calendar-alt"></i> Event QR</h3>
-                    </div>
-                    <div class="input-row"><label>Event Title</label><input type="text" id="eventTitle"
-                            class="auto-update-input"></div>
-                    <div class="input-row"><label>Location</label><input type="text" id="eventLocation"
-                            class="auto-update-input"></div>
-                    <div class="grid-2">
-                        <div class="input-row"><label>Start Date</label><input type="datetime-local" id="eventStart"
-                                class="auto-update-input"></div>
-                        <div class="input-row"><label>End Date</label><input type="datetime-local" id="eventEnd"
-                                class="auto-update-input"></div>
-                    </div>
-                </div>
+                                <!-- CENTER ICON ACCORDION -->
+                                <div class="accordion-item">
+                                        <div class="accordion-header" data-target="centerIconAcc"><i
+                                                        class="fas fa-icons"></i><span>Center
+                                                        Icon</span><i class="fas fa-chevron-down toggle-icon"></i></div>
+                                        <div id="centerIconAcc" class="accordion-content">
+                                                <div class="center-icon-controls">
+                                                        <div class="info-badge"><i class="fas fa-info-circle"></i>
+                                                                Select an icon to display in QR
+                                                                center</div>
+                                                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                                                                <button id="clearCenterIconBtn" class="btn-outline"
+                                                                        style="padding: 4px 12px; font-size: 0.7rem;"><i
+                                                                                class="fas fa-trash"></i>
+                                                                        Clear</button>
+                                                                <button id="resetCenterIconBtn" class="btn-outline"
+                                                                        style="padding: 4px 12px; font-size: 0.7rem;"><i
+                                                                                class="fas fa-undo"></i>
+                                                                        Reset</button>
+                                                        </div>
+                                                </div>
+                                                <div class="icon-selector-grid" id="centerIconSelectorGrid">
+                                                        <div class="icon-option" data-icon="address-card"><i
+                                                                        class="fas fa-address-card"></i><span>vCard</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="link"><i
+                                                                        class="fas fa-link"></i><span>Link</span></div>
+                                                        <div class="icon-option" data-icon="bitcoin"><i
+                                                                        class="fab fa-bitcoin"></i><span>Crypto</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="facebook"><i
+                                                                        class="fab fa-facebook"></i><span>Facebook</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="twitter"><i
+                                                                        class="fab fa-twitter"></i><span>Twitter</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="youtube"><i
+                                                                        class="fab fa-youtube"></i><span>YouTube</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="instagram"><i
+                                                                        class="fab fa-instagram"></i><span>Instagram</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="behance"><i
+                                                                        class="fab fa-behance"></i><span>Behance</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="codepen"><i
+                                                                        class="fab fa-codepen"></i><span>CodePen</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="dribbble"><i
+                                                                        class="fab fa-dribbble"></i><span>Dribbble</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="github"><i
+                                                                        class="fab fa-github"></i><span>GitHub</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="github-1"><i
+                                                                        class="fab fa-github"></i><span>GitHub
+                                                                        Alt</span></div>
+                                                        <div class="icon-option" data-icon="hikmah"><i
+                                                                        class="fas fa-graduation-cap"></i><span>Hikmah</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="home"><i
+                                                                        class="fas fa-home"></i><span>Home</span></div>
+                                                        <div class="icon-option" data-icon="linkedin"><i
+                                                                        class="fab fa-linkedin"></i><span>LinkedIn</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="location"><i
+                                                                        class="fas fa-map-marker-alt"></i><span>Location</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="message"><i
+                                                                        class="fas fa-envelope"></i><span>Message</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="mobile"><i
+                                                                        class="fas fa-mobile-alt"></i><span>Mobile</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="person"><i
+                                                                        class="fas fa-user"></i><span>Person</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="pinterest"><i
+                                                                        class="fab fa-pinterest"></i><span>Pinterest</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="sms"><i
+                                                                        class="fas fa-comment-dots"></i><span>SMS</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="snapchat"><i
+                                                                        class="fab fa-snapchat"></i><span>Snapchat</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="telephone"><i
+                                                                        class="fas fa-phone"></i><span>Telephone</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="telephone-1"><i
+                                                                        class="fas fa-phone-alt"></i><span>Telephone
+                                                                        1</span></div>
+                                                        <div class="icon-option" data-icon="telephone-3"><i
+                                                                        class="fas fa-phone-square"></i><span>Telephone
+                                                                        3</span></div>
+                                                        <div class="icon-option" data-icon="whatsapp"><i
+                                                                        class="fab fa-whatsapp"></i><span>WhatsApp</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="wifi"><i
+                                                                        class="fas fa-wifi"></i><span>WiFi</span></div>
+                                                        <div class="icon-option" data-icon="wifi-logo"><i
+                                                                        class="fas fa-wifi"></i><span>WiFi
+                                                                        Logo</span></div>
+                                                        <div class="icon-option" data-icon="x"><i
+                                                                        class="fab fa-x-twitter"></i><span>X</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="email"><i
+                                                                        class="fas fa-envelope"></i><span>Email</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="event"><i
+                                                                        class="fas fa-calendar-alt"></i><span>Event</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="flights"><i
+                                                                        class="fas fa-plane"></i><span>Flights</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="hajj-umrah"><i
+                                                                        class="fas fa-kaaba"></i><span>Hajj Umrah</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="holidays"><i
+                                                                        class="fas fa-umbrella-beach"></i><span>Holidays</span>
+                                                        </div>
+                                                        <div class="icon-option" data-icon="transfers"><i
+                                                                        class="fas fa-shuttle-van"></i><span>Transfers</span>
+                                                        </div>
+                                                </div>
+                                                <div id="centerIconStatus" class="info-badge" style="margin-top: 12px;">
+                                                        <i class="fas fa-icons"></i> No icon selected
+                                                </div>
+                                                <div class="size-slider" style="margin-top: 12px;">
+                                                        <label><i class="fas fa-expand-alt"></i> Icon Size</label>
+                                                        <input type="range" id="centerIconSize" min="30" max="90"
+                                                                value="55">
+                                                        <span class="center-icon-size-value"
+                                                                id="centerIconSizeValue">55px</span>
+                                                </div>
+                                                <div style="margin-top: 12px;">
+                                                        <label style="display: flex; align-items: center; gap: 8px;"><input
+                                                                        type="checkbox" checked id="eraseBehindIcon">
+                                                                Erase background behind icon</label>
+                                                </div>
+                                                <div class="size-slider" style="margin-top: 8px;">
+                                                        <label><i class="fas fa-border-all"></i> Background border
+                                                                radius</label>
+                                                        <input type="range" id="iconBgRadius" min="0" max="30"
+                                                                value="12" step="1">
+                                                        <span class="center-icon-size-value"
+                                                                id="iconBgRadiusValue">12px</span>
+                                                </div>
+                                        </div>
+                                </div>
 
-                <!-- CENTER ICON ACCORDION -->
-                <div class="accordion-item">
-                    <div class="accordion-header" data-target="centerIconAcc"><i class="fas fa-icons"></i><span>Center
-                            Icon</span><i class="fas fa-chevron-down toggle-icon"></i></div>
-                    <div id="centerIconAcc" class="accordion-content">
-                        <div class="center-icon-controls">
-                            <div class="info-badge"><i class="fas fa-info-circle"></i> Select an icon to display in QR
-                                center</div>
-                            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                                <button id="clearCenterIconBtn" class="btn-outline"
-                                    style="padding: 4px 12px; font-size: 0.7rem;"><i class="fas fa-trash"></i>
-                                    Clear</button>
-                                <button id="resetCenterIconBtn" class="btn-outline"
-                                    style="padding: 4px 12px; font-size: 0.7rem;"><i class="fas fa-undo"></i>
-                                    Reset</button>
-                            </div>
+                                <!-- MOVED AUTO-UPDATE BADGE -->
+                                <div class="badge-moved">
+                                        <div class="auto-update-badge"><i class="fas fa-sync-alt"></i> Auto-updates as
+                                                you type</div>
+                                </div>
                         </div>
-                        <div class="icon-selector-grid" id="centerIconSelectorGrid">
-                            <div class="icon-option" data-icon="address-card"><i
-                                    class="fas fa-address-card"></i><span>vCard</span></div>
-                            <div class="icon-option" data-icon="link"><i class="fas fa-link"></i><span>Link</span></div>
-                            <div class="icon-option" data-icon="bitcoin"><i
-                                    class="fab fa-bitcoin"></i><span>Crypto</span></div>
-                            <div class="icon-option" data-icon="facebook"><i
-                                    class="fab fa-facebook"></i><span>Facebook</span></div>
-                            <div class="icon-option" data-icon="twitter"><i
-                                    class="fab fa-twitter"></i><span>Twitter</span></div>
-                            <div class="icon-option" data-icon="youtube"><i
-                                    class="fab fa-youtube"></i><span>YouTube</span></div>
-                            <div class="icon-option" data-icon="instagram"><i
-                                    class="fab fa-instagram"></i><span>Instagram</span></div>
-                            <div class="icon-option" data-icon="behance"><i
-                                    class="fab fa-behance"></i><span>Behance</span></div>
-                            <div class="icon-option" data-icon="codepen"><i
-                                    class="fab fa-codepen"></i><span>CodePen</span></div>
-                            <div class="icon-option" data-icon="dribbble"><i
-                                    class="fab fa-dribbble"></i><span>Dribbble</span></div>
-                            <div class="icon-option" data-icon="github"><i class="fab fa-github"></i><span>GitHub</span>
-                            </div>
-                            <div class="icon-option" data-icon="github-1"><i class="fab fa-github"></i><span>GitHub
-                                    Alt</span></div>
-                            <div class="icon-option" data-icon="hikmah"><i
-                                    class="fas fa-graduation-cap"></i><span>Hikmah</span></div>
-                            <div class="icon-option" data-icon="home"><i class="fas fa-home"></i><span>Home</span></div>
-                            <div class="icon-option" data-icon="linkedin"><i
-                                    class="fab fa-linkedin"></i><span>LinkedIn</span></div>
-                            <div class="icon-option" data-icon="location"><i
-                                    class="fas fa-map-marker-alt"></i><span>Location</span></div>
-                            <div class="icon-option" data-icon="message"><i
-                                    class="fas fa-envelope"></i><span>Message</span></div>
-                            <div class="icon-option" data-icon="mobile"><i
-                                    class="fas fa-mobile-alt"></i><span>Mobile</span></div>
-                            <div class="icon-option" data-icon="person"><i class="fas fa-user"></i><span>Person</span>
-                            </div>
-                            <div class="icon-option" data-icon="pinterest"><i
-                                    class="fab fa-pinterest"></i><span>Pinterest</span></div>
-                            <div class="icon-option" data-icon="sms"><i class="fas fa-comment-dots"></i><span>SMS</span>
-                            </div>
-                            <div class="icon-option" data-icon="snapchat"><i
-                                    class="fab fa-snapchat"></i><span>Snapchat</span></div>
-                            <div class="icon-option" data-icon="telephone"><i
-                                    class="fas fa-phone"></i><span>Telephone</span></div>
-                            <div class="icon-option" data-icon="telephone-1"><i
-                                    class="fas fa-phone-alt"></i><span>Telephone 1</span></div>
-                            <div class="icon-option" data-icon="telephone-3"><i
-                                    class="fas fa-phone-square"></i><span>Telephone 3</span></div>
-                            <div class="icon-option" data-icon="whatsapp"><i
-                                    class="fab fa-whatsapp"></i><span>WhatsApp</span></div>
-                            <div class="icon-option" data-icon="wifi"><i class="fas fa-wifi"></i><span>WiFi</span></div>
-                            <div class="icon-option" data-icon="wifi-logo"><i class="fas fa-wifi"></i><span>WiFi
-                                    Logo</span></div>
-                            <div class="icon-option" data-icon="x"><i class="fab fa-x-twitter"></i><span>X</span></div>
-                            <div class="icon-option" data-icon="email"><i class="fas fa-envelope"></i><span>Email</span>
-                            </div>
-                            <div class="icon-option" data-icon="event"><i
-                                    class="fas fa-calendar-alt"></i><span>Event</span></div>
-                            <div class="icon-option" data-icon="flights"><i
-                                    class="fas fa-plane"></i><span>Flights</span></div>
-                            <div class="icon-option" data-icon="hajj-umrah"><i
-                                    class="fas fa-kaaba"></i><span>Hajj Umrah</span></div>
-                            <div class="icon-option" data-icon="holidays"><i
-                                    class="fas fa-umbrella-beach"></i><span>Holidays</span></div>
-                            <div class="icon-option" data-icon="transfers"><i
-                                    class="fas fa-shuttle-van"></i><span>Transfers</span></div>
-                        </div>
-                        <div id="centerIconStatus" class="info-badge" style="margin-top: 12px;"><i
-                                class="fas fa-icons"></i> No icon selected</div>
-                        <div class="size-slider" style="margin-top: 12px;">
-                            <label><i class="fas fa-expand-alt"></i> Icon Size</label>
-                            <input type="range" id="centerIconSize" min="30" max="90" value="55">
-                            <span class="center-icon-size-value" id="centerIconSizeValue">55px</span>
-                        </div>
-                        <div style="margin-top: 12px;">
-                            <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" checked
-                                    id="eraseBehindIcon"> Erase background behind icon</label>
-                        </div>
-                        <div class="size-slider" style="margin-top: 8px;">
-                            <label><i class="fas fa-border-all"></i> Background border radius</label>
-                            <input type="range" id="iconBgRadius" min="0" max="30" value="12" step="1">
-                            <span class="center-icon-size-value" id="iconBgRadiusValue">12px</span>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- MOVED AUTO-UPDATE BADGE -->
-                <div class="badge-moved">
-                    <div class="auto-update-badge"><i class="fas fa-sync-alt"></i> Auto-updates as you type</div>
-                </div>
-            </div>
+                        <!-- RIGHT: QR Preview -->
+                        <div class="qr-card">
+                                <div class="qr-visual">
+                                        <h3><i class="fas fa-qrcode"></i> QR Code Preview <span
+                                                        style="font-size: 0.7rem;">(Auto-updating)</span></h3>
+                                        <div class="qr-svg-container" id="svgQrContainer">
+                                                <svg id="dynamicQRsvg" class="qr-svg" width="220" height="220"
+                                                        viewBox="0 0 220 220"></svg>
+                                        </div>
 
-            <!-- RIGHT: QR Preview -->
-            <div class="qr-card">
-                <div class="qr-visual">
-                    <h3><i class="fas fa-qrcode"></i> QR Code Preview <span
-                            style="font-size: 0.7rem;">(Auto-updating)</span></h3>
-                    <div class="qr-svg-container" id="svgQrContainer">
-                        <svg id="dynamicQRsvg" class="qr-svg" width="220" height="220" viewBox="0 0 220 220"></svg>
-                    </div>
-
-                    <!-- Logo Upload Area -->
-                    <div class="logo-upload-area">
-                        <div class="dropzone" id="logoDropzone">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <p>Click or drag & drop to upload LOGO</p>
-                            <input type="file" id="logoFileInput" accept="image/*" style="display: none;">
-                        </div>
-                        <div class="progress-bar-container" id="logoProgressContainer" style="display: none;">
-                            <div class="progress-bar" id="logoProgressBar"></div>
-                        </div>
-                                                <div id="logoPreviewModern" class="logo-preview-panel" style="display: none;">
+                                        <!-- Logo Upload Area -->
+                                        <div class="logo-upload-area">
+                                                <div class="dropzone" id="logoDropzone">
+                                                        <i class="fas fa-cloud-upload-alt"></i>
+                                                        <p>Click or drag & drop to upload LOGO</p>
+                                                        <input type="file" id="logoFileInput" accept="image/*"
+                                                                style="display: none;">
+                                                </div>
+                                                <div class="progress-bar-container" id="logoProgressContainer"
+                                                        style="display: none;">
+                                                        <div class="progress-bar" id="logoProgressBar"></div>
+                                                </div>
+                                                <div id="logoPreviewModern" class="logo-preview-panel"
+                                                        style="display: none;">
                                                         <div class="logo-thumb-frame" id="logoThumbFrame">
-                                                                <img id="logoThumb" class="logo-thumb" alt="Uploaded logo preview">
+                                                                <img id="logoThumb" class="logo-thumb"
+                                                                        alt="Uploaded logo preview">
                                                         </div>
                                                         <div class="logo-control-grid">
                                                                 <div class="size-slider">
-                                                                        <label><i class="fas fa-expand-alt"></i> Logo Size</label>
-                                                                        <input type="range" id="logoSize" min="30" max="90" value="55">
+                                                                        <label><i class="fas fa-expand-alt"></i> Logo
+                                                                                Size</label>
+                                                                        <input type="range" id="logoSize" min="30"
+                                                                                max="90" value="55">
                                                                         <span id="logoSizeValue">55px</span>
                                                                 </div>
                                                                 <div class="size-slider">
-                                                                        <label><i class="fas fa-image"></i> Logo Border Radius</label>
-                                                                        <input type="range" id="logoRadius" min="0" max="30" value="0" step="1">
+                                                                        <label><i class="fas fa-image"></i> Logo Border
+                                                                                Radius</label>
+                                                                        <input type="range" id="logoRadius" min="0"
+                                                                                max="30" value="0" step="1">
                                                                         <span id="logoRadiusValue">0px</span>
                                                                 </div>
                                                                 <div class="size-slider">
-                                                                        <label><i class="fas fa-border-all"></i> Background Border</label>
-                                                                        <input type="range" id="logoBorderSize" min="0" max="20" value="4" step="1">
+                                                                        <label><i class="fas fa-border-all"></i>
+                                                                                Background Border</label>
+                                                                        <input type="range" id="logoBorderSize" min="0"
+                                                                                max="20" value="4" step="1">
                                                                         <span id="logoBorderSizeValue">4px</span>
                                                                 </div>
                                                                 <div class="size-slider">
-                                                                        <label><i class="fas fa-draw-square"></i> Background Border Radius</label>
-                                                                        <input type="range" id="logoBgRadius" min="0" max="30" value="8" step="1">
+                                                                        <label><i class="fas fa-draw-square"></i>
+                                                                                Background Border Radius</label>
+                                                                        <input type="range" id="logoBgRadius" min="0"
+                                                                                max="30" value="8" step="1">
                                                                         <span id="logoBgRadiusValue">8px</span>
                                                                 </div>
-                                                                <label class="logo-toggle"><input type="checkbox" id="eraseBehindLogo" checked> Erase background behind logo</label>
+                                                                <label class="logo-toggle"><input type="checkbox"
+                                                                                id="eraseBehindLogo" checked> Erase
+                                                                        background behind logo</label>
                                                         </div>
-                        </div>
-                        <div id="logoStatus" class="info-badge"><i class="fas fa-image"></i> No logo</div>
-                    </div>
+                                                </div>
+                                                <div id="logoStatus" class="info-badge"><i class="fas fa-image"></i> No
+                                                        logo</div>
+                                        </div>
 
-                    <div class="btn-group-qr">
-                        <button id="downloadSvgBtn" class="btn-outline"><i class="fas fa-download"></i> SVG</button>
-                        <button id="downloadPngBtn" class="btn-outline"><i class="fas fa-image"></i> PNG</button>
-                        <button id="downloadVcfBtn" class="btn-outline"><i class="fas fa-address-card"></i>
-                            .VCF</button>
-                    </div>
+                                        <div class="btn-group-qr">
+                                                <button id="downloadSvgBtn" class="btn-outline"><i
+                                                                class="fas fa-download"></i> SVG</button>
+                                                <button id="downloadPngBtn" class="btn-outline"><i
+                                                                class="fas fa-image"></i> PNG</button>
+                                                <button id="downloadVcfBtn" class="btn-outline"><i
+                                                                class="fas fa-address-card"></i>
+                                                        .VCF</button>
+                                        </div>
                                         <details class="preview-accordion">
                                                 <summary class="preview-accordion-header">
                                                         <span><i class="fas fa-sliders-h"></i> QR Style Controls</span>
@@ -546,63 +853,188 @@
                                                 <div class="preview-accordion-content">
                                                         <div class="qr-style-panel">
                                                                 <div class="size-slider qr-style-slider">
-                                                                        <label><i class="fas fa-expand-alt"></i> Dot Size</label>
-                                                                        <input type="range" id="qrDotSize" min="55" max="100" value="100" step="1">
+                                                                        <label><i class="fas fa-expand-alt"></i> Dot
+                                                                                Size</label>
+                                                                        <input type="range" id="qrDotSize" min="55"
+                                                                                max="100" value="100" step="1">
                                                                         <span id="qrDotSizeValue">100%</span>
                                                                 </div>
                                                                 <div class="qr-style-block">
                                                                         <div class="qr-style-title">Dots</div>
                                                                         <div class="qr-style-grid">
-                                                                                <button type="button" class="qr-style-option selected" data-dot-style="square" aria-label="Square dots" aria-pressed="true">
-                                                                                        <svg class="qr-style-preview" viewBox="0 0 36 36" aria-hidden="true">
-                                                                                                <rect x="4" y="4" width="8" height="8" rx="1"></rect>
-                                                                                                <rect x="14" y="4" width="8" height="8" rx="1"></rect>
-                                                                                                <rect x="24" y="4" width="8" height="8" rx="1"></rect>
-                                                                                                <rect x="4" y="14" width="8" height="8" rx="1"></rect>
-                                                                                                <rect x="14" y="14" width="8" height="8" rx="1"></rect>
-                                                                                                <rect x="24" y="14" width="8" height="8" rx="1"></rect>
-                                                                                                <rect x="4" y="24" width="8" height="8" rx="1"></rect>
-                                                                                                <rect x="14" y="24" width="8" height="8" rx="1"></rect>
-                                                                                                <rect x="24" y="24" width="8" height="8" rx="1"></rect>
+                                                                                <button type="button"
+                                                                                        class="qr-style-option selected"
+                                                                                        data-dot-style="square"
+                                                                                        aria-label="Square dots"
+                                                                                        aria-pressed="true">
+                                                                                        <svg class="qr-style-preview"
+                                                                                                viewBox="0 0 36 36"
+                                                                                                aria-hidden="true">
+                                                                                                <rect x="4" y="4"
+                                                                                                        width="8"
+                                                                                                        height="8"
+                                                                                                        rx="1"></rect>
+                                                                                                <rect x="14" y="4"
+                                                                                                        width="8"
+                                                                                                        height="8"
+                                                                                                        rx="1"></rect>
+                                                                                                <rect x="24" y="4"
+                                                                                                        width="8"
+                                                                                                        height="8"
+                                                                                                        rx="1"></rect>
+                                                                                                <rect x="4" y="14"
+                                                                                                        width="8"
+                                                                                                        height="8"
+                                                                                                        rx="1"></rect>
+                                                                                                <rect x="14" y="14"
+                                                                                                        width="8"
+                                                                                                        height="8"
+                                                                                                        rx="1"></rect>
+                                                                                                <rect x="24" y="14"
+                                                                                                        width="8"
+                                                                                                        height="8"
+                                                                                                        rx="1"></rect>
+                                                                                                <rect x="4" y="24"
+                                                                                                        width="8"
+                                                                                                        height="8"
+                                                                                                        rx="1"></rect>
+                                                                                                <rect x="14" y="24"
+                                                                                                        width="8"
+                                                                                                        height="8"
+                                                                                                        rx="1"></rect>
+                                                                                                <rect x="24" y="24"
+                                                                                                        width="8"
+                                                                                                        height="8"
+                                                                                                        rx="1"></rect>
                                                                                         </svg>
                                                                                 </button>
-                                                                                <button type="button" class="qr-style-option" data-dot-style="rounded" aria-label="Rounded dots" aria-pressed="false">
-                                                                                        <svg class="qr-style-preview" viewBox="0 0 36 36" aria-hidden="true">
-                                                                                                <rect x="4" y="4" width="8" height="8" rx="3"></rect>
-                                                                                                <rect x="14" y="4" width="8" height="8" rx="3"></rect>
-                                                                                                <rect x="24" y="4" width="8" height="8" rx="3"></rect>
-                                                                                                <rect x="4" y="14" width="8" height="8" rx="3"></rect>
-                                                                                                <rect x="14" y="14" width="8" height="8" rx="3"></rect>
-                                                                                                <rect x="24" y="14" width="8" height="8" rx="3"></rect>
-                                                                                                <rect x="4" y="24" width="8" height="8" rx="3"></rect>
-                                                                                                <rect x="14" y="24" width="8" height="8" rx="3"></rect>
-                                                                                                <rect x="24" y="24" width="8" height="8" rx="3"></rect>
+                                                                                <button type="button"
+                                                                                        class="qr-style-option"
+                                                                                        data-dot-style="rounded"
+                                                                                        aria-label="Rounded dots"
+                                                                                        aria-pressed="false">
+                                                                                        <svg class="qr-style-preview"
+                                                                                                viewBox="0 0 36 36"
+                                                                                                aria-hidden="true">
+                                                                                                <rect x="4" y="4"
+                                                                                                        width="8"
+                                                                                                        height="8"
+                                                                                                        rx="3"></rect>
+                                                                                                <rect x="14" y="4"
+                                                                                                        width="8"
+                                                                                                        height="8"
+                                                                                                        rx="3"></rect>
+                                                                                                <rect x="24" y="4"
+                                                                                                        width="8"
+                                                                                                        height="8"
+                                                                                                        rx="3"></rect>
+                                                                                                <rect x="4" y="14"
+                                                                                                        width="8"
+                                                                                                        height="8"
+                                                                                                        rx="3"></rect>
+                                                                                                <rect x="14" y="14"
+                                                                                                        width="8"
+                                                                                                        height="8"
+                                                                                                        rx="3"></rect>
+                                                                                                <rect x="24" y="14"
+                                                                                                        width="8"
+                                                                                                        height="8"
+                                                                                                        rx="3"></rect>
+                                                                                                <rect x="4" y="24"
+                                                                                                        width="8"
+                                                                                                        height="8"
+                                                                                                        rx="3"></rect>
+                                                                                                <rect x="14" y="24"
+                                                                                                        width="8"
+                                                                                                        height="8"
+                                                                                                        rx="3"></rect>
+                                                                                                <rect x="24" y="24"
+                                                                                                        width="8"
+                                                                                                        height="8"
+                                                                                                        rx="3"></rect>
                                                                                         </svg>
                                                                                 </button>
-                                                                                <button type="button" class="qr-style-option" data-dot-style="dots" aria-label="Dot style" aria-pressed="false">
-                                                                                        <svg class="qr-style-preview" viewBox="0 0 36 36" aria-hidden="true">
-                                                                                                <circle cx="8" cy="8" r="3"></circle>
-                                                                                                <circle cx="18" cy="8" r="3"></circle>
-                                                                                                <circle cx="28" cy="8" r="3"></circle>
-                                                                                                <circle cx="8" cy="18" r="3"></circle>
-                                                                                                <circle cx="18" cy="18" r="3"></circle>
-                                                                                                <circle cx="28" cy="18" r="3"></circle>
-                                                                                                <circle cx="8" cy="28" r="3"></circle>
-                                                                                                <circle cx="18" cy="28" r="3"></circle>
-                                                                                                <circle cx="28" cy="28" r="3"></circle>
+                                                                                <button type="button"
+                                                                                        class="qr-style-option"
+                                                                                        data-dot-style="dots"
+                                                                                        aria-label="Dot style"
+                                                                                        aria-pressed="false">
+                                                                                        <svg class="qr-style-preview"
+                                                                                                viewBox="0 0 36 36"
+                                                                                                aria-hidden="true">
+                                                                                                <circle cx="8" cy="8"
+                                                                                                        r="3"></circle>
+                                                                                                <circle cx="18" cy="8"
+                                                                                                        r="3"></circle>
+                                                                                                <circle cx="28" cy="8"
+                                                                                                        r="3"></circle>
+                                                                                                <circle cx="8" cy="18"
+                                                                                                        r="3"></circle>
+                                                                                                <circle cx="18" cy="18"
+                                                                                                        r="3"></circle>
+                                                                                                <circle cx="28" cy="18"
+                                                                                                        r="3"></circle>
+                                                                                                <circle cx="8" cy="28"
+                                                                                                        r="3"></circle>
+                                                                                                <circle cx="18" cy="28"
+                                                                                                        r="3"></circle>
+                                                                                                <circle cx="28" cy="28"
+                                                                                                        r="3"></circle>
                                                                                         </svg>
                                                                                 </button>
-                                                                                <button type="button" class="qr-style-option" data-dot-style="diamond" aria-label="Diamond dots" aria-pressed="false">
-                                                                                        <svg class="qr-style-preview" viewBox="0 0 36 36" aria-hidden="true">
-                                                                                                <rect x="5" y="5" width="6" height="6" transform="rotate(45 8 8)"></rect>
-                                                                                                <rect x="15" y="5" width="6" height="6" transform="rotate(45 18 8)"></rect>
-                                                                                                <rect x="25" y="5" width="6" height="6" transform="rotate(45 28 8)"></rect>
-                                                                                                <rect x="5" y="15" width="6" height="6" transform="rotate(45 8 18)"></rect>
-                                                                                                <rect x="15" y="15" width="6" height="6" transform="rotate(45 18 18)"></rect>
-                                                                                                <rect x="25" y="15" width="6" height="6" transform="rotate(45 28 18)"></rect>
-                                                                                                <rect x="5" y="25" width="6" height="6" transform="rotate(45 8 28)"></rect>
-                                                                                                <rect x="15" y="25" width="6" height="6" transform="rotate(45 18 28)"></rect>
-                                                                                                <rect x="25" y="25" width="6" height="6" transform="rotate(45 28 28)"></rect>
+                                                                                <button type="button"
+                                                                                        class="qr-style-option"
+                                                                                        data-dot-style="diamond"
+                                                                                        aria-label="Diamond dots"
+                                                                                        aria-pressed="false">
+                                                                                        <svg class="qr-style-preview"
+                                                                                                viewBox="0 0 36 36"
+                                                                                                aria-hidden="true">
+                                                                                                <rect x="5" y="5"
+                                                                                                        width="6"
+                                                                                                        height="6"
+                                                                                                        transform="rotate(45 8 8)">
+                                                                                                </rect>
+                                                                                                <rect x="15" y="5"
+                                                                                                        width="6"
+                                                                                                        height="6"
+                                                                                                        transform="rotate(45 18 8)">
+                                                                                                </rect>
+                                                                                                <rect x="25" y="5"
+                                                                                                        width="6"
+                                                                                                        height="6"
+                                                                                                        transform="rotate(45 28 8)">
+                                                                                                </rect>
+                                                                                                <rect x="5" y="15"
+                                                                                                        width="6"
+                                                                                                        height="6"
+                                                                                                        transform="rotate(45 8 18)">
+                                                                                                </rect>
+                                                                                                <rect x="15" y="15"
+                                                                                                        width="6"
+                                                                                                        height="6"
+                                                                                                        transform="rotate(45 18 18)">
+                                                                                                </rect>
+                                                                                                <rect x="25" y="15"
+                                                                                                        width="6"
+                                                                                                        height="6"
+                                                                                                        transform="rotate(45 28 18)">
+                                                                                                </rect>
+                                                                                                <rect x="5" y="25"
+                                                                                                        width="6"
+                                                                                                        height="6"
+                                                                                                        transform="rotate(45 8 28)">
+                                                                                                </rect>
+                                                                                                <rect x="15" y="25"
+                                                                                                        width="6"
+                                                                                                        height="6"
+                                                                                                        transform="rotate(45 18 28)">
+                                                                                                </rect>
+                                                                                                <rect x="25" y="25"
+                                                                                                        width="6"
+                                                                                                        height="6"
+                                                                                                        transform="rotate(45 28 28)">
+                                                                                                </rect>
                                                                                         </svg>
                                                                                 </button>
                                                                         </div>
@@ -610,19 +1042,47 @@
                                                                 <div class="qr-style-block">
                                                                         <div class="qr-style-title">Marker border</div>
                                                                         <div class="qr-style-grid">
-                                                                                <button type="button" class="qr-style-option selected" data-marker-style="square" aria-label="Square marker border" aria-pressed="true">
-                                                                                        <svg class="qr-style-preview" viewBox="0 0 36 36" aria-hidden="true">
-                                                                                                <rect class="qr-style-outline" x="7" y="7" width="22" height="22" rx="1"></rect>
+                                                                                <button type="button"
+                                                                                        class="qr-style-option selected"
+                                                                                        data-marker-style="square"
+                                                                                        aria-label="Square marker border"
+                                                                                        aria-pressed="true">
+                                                                                        <svg class="qr-style-preview"
+                                                                                                viewBox="0 0 36 36"
+                                                                                                aria-hidden="true">
+                                                                                                <rect class="qr-style-outline"
+                                                                                                        x="7" y="7"
+                                                                                                        width="22"
+                                                                                                        height="22"
+                                                                                                        rx="1"></rect>
                                                                                         </svg>
                                                                                 </button>
-                                                                                <button type="button" class="qr-style-option" data-marker-style="rounded" aria-label="Rounded marker border" aria-pressed="false">
-                                                                                        <svg class="qr-style-preview" viewBox="0 0 36 36" aria-hidden="true">
-                                                                                                <rect class="qr-style-outline" x="7" y="7" width="22" height="22" rx="7"></rect>
+                                                                                <button type="button"
+                                                                                        class="qr-style-option"
+                                                                                        data-marker-style="rounded"
+                                                                                        aria-label="Rounded marker border"
+                                                                                        aria-pressed="false">
+                                                                                        <svg class="qr-style-preview"
+                                                                                                viewBox="0 0 36 36"
+                                                                                                aria-hidden="true">
+                                                                                                <rect class="qr-style-outline"
+                                                                                                        x="7" y="7"
+                                                                                                        width="22"
+                                                                                                        height="22"
+                                                                                                        rx="7"></rect>
                                                                                         </svg>
                                                                                 </button>
-                                                                                <button type="button" class="qr-style-option" data-marker-style="circle" aria-label="Circle marker border" aria-pressed="false">
-                                                                                        <svg class="qr-style-preview" viewBox="0 0 36 36" aria-hidden="true">
-                                                                                                <circle class="qr-style-outline" cx="18" cy="18" r="11"></circle>
+                                                                                <button type="button"
+                                                                                        class="qr-style-option"
+                                                                                        data-marker-style="circle"
+                                                                                        aria-label="Circle marker border"
+                                                                                        aria-pressed="false">
+                                                                                        <svg class="qr-style-preview"
+                                                                                                viewBox="0 0 36 36"
+                                                                                                aria-hidden="true">
+                                                                                                <circle class="qr-style-outline"
+                                                                                                        cx="18" cy="18"
+                                                                                                        r="11"></circle>
                                                                                         </svg>
                                                                                 </button>
                                                                         </div>
@@ -630,26 +1090,37 @@
                                                         </div>
                                                 </div>
                                         </details>
-                    <div class="generate-btn-wrapper">
-                        <button id="generateQrBtn" class="btn-primary"><i class="fas fa-qrcode"></i> Generate QR
-                            Code</button>
-                    </div>
+                                        <div class="generate-btn-wrapper">
+                                                <button id="generateQrBtn" class="btn-primary"><i
+                                                                class="fas fa-qrcode"></i> Generate QR
+                                                        Code</button>
+                                        </div>
+                                </div>
+                        </div>
                 </div>
-            </div>
-        </div>
                 <footer class="site-footer">
                         <div class="footer-content">
                                 <div class="footer-brand">
-                                        <div class="footer-mark"><i class="fas fa-qrcode"></i><span>QR Studio</span></div>
+                                        <div class="footer-mark"><i class="fas fa-qrcode"></i><span>QR Studio</span>
+                                        </div>
                                         <p>Build vCards, social links, crypto, and smart QR codes in one place.</p>
                                 </div>
                                 <div class="footer-meta">
-                                        <span>Copyright &copy; <span id="year-update">2024</span> All rights reserved.</span>
-                                        <a href="https://www.almamunhossen.com" target="_blank" rel="noopener noreferrer">Al Mamun Hossen</a>
+                                        <span>Copyright &copy; <span id="year-update">2024</span> All rights
+                                                reserved.</span>
+                                        <a href="https://www.almamunhossen.com" target="_blank"
+                                                rel="noopener noreferrer">Al Mamun Hossen</a>
                                 </div>
                         </div>
                 </footer>
-    </div>
-    <script src="app.js"></script>
+        </div>
+        </div>
+
+
+        <!-- QR Scanner Library -->
+        <script src="app.js"></script>
+        <script src="QRScanner.js"></script>
+
 </body>
+
 </html>
